@@ -1,0 +1,64 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/CASystem.pd
+//* Author:  Varuna
+//* Created: 14:39:29 on Sunday January 25th 2015 UTC
+//*******************************************************
+
+class CASystem ^=
+abstract
+	
+	const defaultTimeToFlyFor ^= 60.00; //seconds
+	
+	var aircrafts : seq of Aircraft;
+	var minX : real; //m
+	var maxX : real; //m
+	var minY : real; //m
+	var maxY : real; //m
+	var conflicts : map of (AircraftPair -> ConflictStatus);
+	
+	//no 2 aircrafts have the same id
+	invariant forall a::aircrafts :- a#aircrafts = 1;
+	invariant forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY;
+	invariant forall a::conflicts.dom :- a.craft1 in aircrafts & a.craft2 in aircrafts;
+	
+interface
+	
+	function willAllAircraftsBeInBoundaryAfterFlying : bool
+		^= forall a::aircrafts :- willAircraftBeInBoundryAfterFlying(a);
+	
+	function willAircraftBeInBoundryAfterFlying(aircraft : Aircraft) : bool
+		^= (let endPosition ^= aircraft.positionAfterFlying(defaultTimeToFlyFor);
+			minX <= endPosition.x <= maxX & minY <= endPosition.y <= maxY);
+	
+	function getPairs : set of AircraftPair
+		^= (let s ^= set of AircraftPair{};
+			let b ^= forall i::0..<#aircrafts :-(forall j::i..<#aircrafts :- s = s.append(AircraftPair{aircrafts[i], aircrafts[j]}));
+			s);
+	
+	schema !dropIfLeavesBoundaryAfterFlying
+		//pre ~willAllAircraftsBeInBoundaryAfterFlying
+		post (let craftsToRemove ^=(those a::aircrafts :- ~willAircraftBeInBoundryAfterFlying(a));
+			  aircrafts != (those x::aircrafts :- x ~in craftsToRemove),
+			  conflicts != map of (AircraftPair -> ConflictStatus){(those c::conflicts :- c.x.craft1 ~in craftsToRemove & c.x.craft2 ~in craftsToRemove).pairs});
+	
+	schema !fly
+		post self!dropIfLeavesBoundaryAfterFlying,
+			 (forall craft::aircrafts :- craft!fly(defaultTimeToFlyFor));
+	
+	build{}
+		post minX != 0.00,
+			 maxX != 10000.00,
+			 minY != 0.00,
+			 maxY != 10000.00,
+			 aircrafts != seq of Aircraft {Aircraft {Vector{10.00, 1000.00 , 3434.00, VectorType Position}, Vector{234.00, 643.00, 0.00, VectorType Velocity}, 50.00, AircraftStatus FlyingAtLevel, "A"},
+										   Aircraft {Vector{67.00, 5.00 , 3434.00, VectorType Position}, Vector{54.00, 346.00, 0.00, VectorType Velocity}, 20.00, AircraftStatus FlyingAtLevel, "B"},
+										   Aircraft {Vector{879.00, 664.00, 3434.00, VectorType Position}, Vector{265.00, 786.00, 0.00, VectorType Velocity}, 30.00, AircraftStatus FlyingAtLevel, "C"},
+										   Aircraft {Vector{435.00, 234.00, 3434.00, VectorType Position}, Vector{3452.00, 324.00, 0.00, VectorType Velocity}, 25.00, AircraftStatus FlyingAtLevel, "D"},
+										   Aircraft {Vector{76568.00, 6575.00, 3434.00, VectorType Position}, Vector{657.00, 675.00, 0.00, VectorType Velocity}, 30.00, AircraftStatus FlyingAtLevel, "E"},
+										   Aircraft {Vector{453.00, 5753.00, 3434.00, VectorType Position}, Vector{243.00, 165.00, 0.00, VectorType Velocity}, 10.00, AircraftStatus FlyingAtLevel, "F"},
+										   Aircraft {Vector{987.00, 5342.00, 344.00, VectorType Position}, Vector{364.00, 673.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G"}},
+			 conflicts != map of (AircraftPair -> ConflictStatus){},
+			 (let pairs ^= getPairs;
+			  forall p::pairs :- conflicts != conflicts.append(p -> p.getConflictStatus));
+		
+end;

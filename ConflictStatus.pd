@@ -1,0 +1,13 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/ConflictStatus.pd
+//* Author:  Varuna
+//* Created: 15:28:58 on Sunday January 25th 2015 UTC
+//*******************************************************
+
+class ConflictStatus ^=
+		enum
+			Conflicted,
+			PotentialFutureConflict,
+			NoConflict
+		end;
+

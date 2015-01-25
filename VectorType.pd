@@ -1,0 +1,12 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/VectorType.pd
+//* Author:  Varuna
+//* Created: 13:10:56 on Sunday January 25th 2015 UTC
+//*******************************************************
+
+class VectorType ^=
+	enum
+		Position,
+		Velocity,
+		Distance
+	end;

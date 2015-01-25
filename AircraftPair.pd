@@ -1,0 +1,33 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/AircraftPair.pd
+//* Author:  Varuna
+//* Created: 15:53:34 on Sunday January 25th 2015 UTC
+//*******************************************************
+
+class AircraftPair ^=
+abstract
+
+	var craft1 : Aircraft;
+	var craft2 : Aircraft;
+	
+	invariant craft1 ~= craft2;
+	invariant craft2.getConflictStatus(craft1) = craft1.getConflictStatus(craft2)
+
+interface
+
+	function craft1;
+	
+	function craft2;
+
+	function getConflictStatus : ConflictStatus
+		^= craft1.getConflictStatus(craft2)
+		assert result = craft2.getConflictStatus(craft1);		
+	
+	//!!redefine operator =(other : AircraftPair) : bool
+	//^= ((craft1 = other.craft1 & craft2 = other.craft2) | (craft1 = other.craft2 & craft2 = other.craft1));
+
+	build{!craft1 : Aircraft, !craft2 : Aircraft}
+		pre craft1 ~= craft2;
+		
+end;
+

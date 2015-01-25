@@ -1,0 +1,42 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Main.pd
+//* Author:  Varuna
+//* Created: 14:30:57 on Sunday January 25th 2015 UTC
+//* Note:    This is the 'Perfect' program entry point.
+//*******************************************************
+
+//import "?.pd";		// File containing main application class
+
+schema main(context!: limited Environment, args: seq of string, ret!: out int)
+	pre #args > 0
+	post change context , ret satisfy undefRel(context' , ret') , ret' = 0
+	via
+		var aircrafts : set of Aircraft != Flight{FlightStatus on_ground, EngineStatus eng_off, FuelStatus fuel_ok};
+        var helpText : string != " S - Show Flight Parameters \n H - Help \n X - Exit \n";
+        context!print("System booted\n") ;
+        context!print(helpText);
+        loop
+    	    var count : nat! = 100 ;
+            change context , thisFlight
+            keep undefRel(context' , thisFlight' , count')
+            until count' = 0
+            decrease count' ;
+                var line : string ,
+                    rret : FileError ;
+                count! - 1 ;
+                context!readLine(line! , rret!) ;
+                if [line="H"] : context!print(helpText) ;
+                   [line="S"] : context!print(thisFlight.getFlightParameters) ;
+                   [line="X"] : count != 0;
+                   []
+                fi
+        end ;
+		ret! = 0;
+	end;
+
+
+    function undefRel(a: class A , b: class B): bool
+        ^= true ;
+
+    function undefRel(a: class A , b: class B , c: class C): bool
+        ^= true ;

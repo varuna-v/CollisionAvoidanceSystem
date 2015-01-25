@@ -1,0 +1,68 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Aircraft.pd
+//* Author:  Varuna
+//* Created: 11:49:59 on Thursday January 8th 2015 UTC
+//*******************************************************
+
+class Aircraft ^=
+abstract
+
+	//Time added to hypothetical time to get maximum time before potential conflict is declared
+	const safteyTime ^= 300.00; //seconds
+	
+	var position : Vector;
+	var velocity : Vector; // km or m per sec
+	var boundaryRadius : real; // km or m as above
+	var status : AircraftStatus;
+	var identification : string;
+	
+	invariant position.type = VectorType Position;
+	invariant velocity.type = VectorType Velocity;
+	invariant ~identification.empty;
+	
+interface	
+
+	function position;
+	
+	function speed : real
+		^= velocity.magnitude;
+		
+	function getConflictStatus(other : Aircraft) : ConflictStatus
+		^= ([isInConflictWith(other)] : ConflictStatus Conflicted,
+			[potentialFutureConflict(other)] : ConflictStatus PotentialFutureConflict,
+			[] : ConflictStatus NoConflict);
+	
+	function isInConflictWith(other : Aircraft) : bool
+		^= position.getDistanceFrom(other.position) <= (boundaryRadius + other.boundaryRadius);
+
+	function potentialFutureConflict(other : Aircraft) : bool
+		pre ~isInConflictWith(other) & other.velocity ~= velocity
+		^= (timeToCollision(other) <= (timeToHypotheticalCollisionWith(other) + safteyTime));
+		
+	function timeToCollision(other : Aircraft) : real
+		pre ~isInConflictWith(other) & other.velocity ~= velocity
+		^= (let velocityDifference ^= other.velocity - velocity;
+			((position - other.position).dotProduct(velocityDifference)/(velocityDifference.magnitude)^2));
+		//!!assert result >= 0.00;
+		
+	//Minimum time to collision if the aircraft as not in conflict
+	function timeToHypotheticalCollisionWith(other : Aircraft) : real
+		pre ~isInConflictWith(other)
+		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
+								  [] : other.boundaryRadius);
+			biggerRadius/(speed+other.speed));
+	
+	function positionAfterFlying(time : real) : Vector
+		^= position.plus((velocity * time), VectorType Position);
+	
+	schema !fly(time : real)
+		post position != positionAfterFlying(time);
+	
+	//operator =(other : Aircraft) : bool
+	//	^= identification = other.identification;
+	
+	build{!position : Vector, !velocity : Vector, ! boundaryRadius : real, !status : AircraftStatus, !identification : string}
+		pre  position.type = VectorType Position & velocity.type = VectorType Velocity & ~identification.empty;
+	
+end;
+

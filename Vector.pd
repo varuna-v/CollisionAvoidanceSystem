@@ -1,0 +1,55 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Vector.pd
+//* Author:  Varuna
+//* Created: 11:51:47 on Thursday January 8th 2015 UTC
+//*******************************************************
+
+class Vector ^=
+abstract
+
+	var x : real;
+	var y : real;
+	var z : real;
+	var type : VectorType;
+	
+interface
+	
+	function x;
+	
+	function y;
+	
+	function z;
+	
+	function type;
+	
+	function magnitude : real
+		^= ((x^2 + y^2 + z^2)^(1/2));
+	
+	function getDistanceFrom(other : Vector)  : real
+		pre type = VectorType Position & other.type = VectorType Position
+		^= (((x-other.x)^2) + ((y-other.y)^2) + ((z-other.z)^2)) ^ (1/2);
+	
+	function positionAtTime(t : real, velocity : Vector) : Vector
+		pre type = VectorType Position & velocity.type = VectorType Velocity
+		^= Vector { x + (velocity.x*t), y + (velocity.y*t), z + (velocity.z*t), VectorType Position};
+	
+	function dotProduct(other : Vector) : real
+		^= ((x * other.x) + (y * other.y) + (z * other.z));
+	
+	function plus(other : Vector, resultType : VectorType) : Vector
+		^= Vector { x + other.x, y + other.y, z + other.z, resultType};
+	
+	operator -(other : Vector) : Vector
+		pre type = other.type
+		^= Vector { x - other.x, y - other.y, z - other.z, type};
+	
+	operator *(scalar : real) : Vector
+		^= Vector { x * scalar, y * scalar, z * scalar, type};
+		
+	build{!x : real, !y : real, !type : VectorType}
+		post z != 0.0;
+
+	build{!x : real, !y : real, !z : real, !type : VectorType};
+	
+end;
+
