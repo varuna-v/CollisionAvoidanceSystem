@@ -11,7 +11,6 @@ abstract
 	var craft2 : Aircraft;
 	
 	invariant craft1 ~= craft2;
-	invariant craft2.getConflictStatus(craft1) = craft1.getConflictStatus(craft2)
 
 interface
 
@@ -20,12 +19,15 @@ interface
 	function craft2;
 
 	function getConflictStatus : ConflictStatus
-		^= craft1.getConflictStatus(craft2)
-		assert result = craft2.getConflictStatus(craft1);		
+		^= craft1.getConflictStatus(craft2);
+		//!!assert result = craft2.getConflictStatus(craft1);		
 	
 	//!!redefine operator =(other : AircraftPair) : bool
 	//^= ((craft1 = other.craft1 & craft2 = other.craft2) | (craft1 = other.craft2 & craft2 = other.craft1));
 
+	redefine function toString : string
+		^=	"Craft 1 \n" ++ craft1.toString ++ "\n Craft 2 \n" ++ craft2.toString; 
+	
 	build{!craft1 : Aircraft, !craft2 : Aircraft}
 		pre craft1 ~= craft2;
 		

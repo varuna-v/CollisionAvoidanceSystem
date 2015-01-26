@@ -29,11 +29,13 @@ interface
 		
 	function getConflictStatus(other : Aircraft) : ConflictStatus
 		^= ([isInConflictWith(other)] : ConflictStatus Conflicted,
-			[potentialFutureConflict(other)] : ConflictStatus PotentialFutureConflict,
-			[] : ConflictStatus NoConflict);
+					  [other.velocity ~= velocity & potentialFutureConflict(other)] : ConflictStatus PotentialFutureConflict,
+					  [] : ConflictStatus NoConflict);
+		 //assert result = other.getConflictStatus(self);
 	
 	function isInConflictWith(other : Aircraft) : bool
-		^= position.getDistanceFrom(other.position) <= (boundaryRadius + other.boundaryRadius);
+		^= position.getTwoDimensionalDistanceFrom(other.position) < ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
+																		[] : other.boundaryRadius);
 
 	function potentialFutureConflict(other : Aircraft) : bool
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
@@ -55,8 +57,11 @@ interface
 	function positionAfterFlying(time : real) : Vector
 		^= position.plus((velocity * time), VectorType Position);
 	
-	schema !fly(time : real)
-		post position != positionAfterFlying(time);
+	function getCraftAfterFlying(time : real) : Aircraft
+		^= Aircraft {positionAfterFlying(time), velocity, boundaryRadius, status, identification};
+	
+	redefine function toString : string
+		^= "\t Position: " ++ position.toString ++ "\n\t Velocity: " ++ velocity.toString;
 	
 	//operator =(other : Aircraft) : bool
 	//	^= identification = other.identification;

@@ -11,29 +11,32 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
 	pre #args > 0
 	post change context , ret satisfy undefRel(context' , ret') , ret' = 0
 	via
-		var aircrafts : set of Aircraft != Flight{FlightStatus on_ground, EngineStatus eng_off, FuelStatus fuel_ok};
-        var helpText : string != " S - Show Flight Parameters \n H - Help \n X - Exit \n";
+		let initialCrafts ^= seq of Aircraft {Aircraft {Vector{10.00  , 1000.00 , 21353.00, VectorType Position}, Vector{234.00, 643.00, 0.00, VectorType Velocity}, 50.00, AircraftStatus FlyingAtLevel, "A"},
+											  Aircraft {Vector{67.00  , 5.00 , 3434.00, VectorType Position}, Vector{54.00, 346.00, 0.00, VectorType Velocity}, 20.00, AircraftStatus FlyingAtLevel, "B"},
+											  Aircraft {Vector{879.00 , 664.00, 7834.00, VectorType Position}, Vector{265.00, 786.00, 0.00, VectorType Velocity}, 30.00, AircraftStatus FlyingAtLevel, "C"},
+											  Aircraft {Vector{435.00 , 234.00, 45534.00, VectorType Position}, Vector{3452.00, 324.00, 0.00, VectorType Velocity}, 25.00, AircraftStatus FlyingAtLevel, "D"},
+											  Aircraft {Vector{7568.00, 6675.00, 34456.00, VectorType Position}, Vector{657.00, 675.00, 0.00, VectorType Velocity}, 35.00, AircraftStatus FlyingAtLevel, "E"},
+											  Aircraft {Vector{453.00 , 5753.00, 3468.00, VectorType Position}, Vector{243.00, 165.00, 0.00, VectorType Velocity}, 10.00, AircraftStatus FlyingAtLevel, "F"},
+											  Aircraft {Vector{987.00 , 5342.00, 344.00, VectorType Position}, Vector{364.00, 673.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G"}};
+		var system : CASystem != CASystem{initialCrafts, 0.00, 10000.00, 0.00, 10000.00};
         context!print("System booted\n") ;
-        context!print(helpText);
         loop
-    	    var count : nat! = 100 ;
-            change context , thisFlight
-            keep undefRel(context' , thisFlight' , count')
+    	    var count : nat! = 30 ;
+            change context , system
+            keep undefRel(context' , system' , count')
             until count' = 0
             decrease count' ;
                 var line : string ,
                     rret : FileError ;
                 count! - 1 ;
                 context!readLine(line! , rret!) ;
-                if [line="H"] : context!print(helpText) ;
-                   [line="S"] : context!print(thisFlight.getFlightParameters) ;
-                   [line="X"] : count != 0;
-                   []
+                if [line="X"] : count != 0;
+                   [] : context!print(system.printConflicts);
+						system!fly
                 fi
         end ;
 		ret! = 0;
 	end;
-
 
     function undefRel(a: class A , b: class B): bool
         ^= true ;
