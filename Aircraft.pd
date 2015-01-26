@@ -34,8 +34,9 @@ interface
 		 //assert result = other.getConflictStatus(self);
 	
 	function isInConflictWith(other : Aircraft) : bool
-		^= position.getTwoDimensionalDistanceFrom(other.position) < ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
-																		[] : other.boundaryRadius);
+		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
+								  [] : other.boundaryRadius);
+			position.getTwoDimensionalDistanceFrom(other.position) <= biggerRadius);
 
 	function potentialFutureConflict(other : Aircraft) : bool
 		pre ~isInConflictWith(other) & other.velocity ~= velocity

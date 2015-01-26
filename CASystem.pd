@@ -7,7 +7,7 @@
 class CASystem ^=
 abstract
 	
-	const defaultTimeToFlyFor ^= 60.00; //seconds
+	const defaultTimeToFlyFor ^= 1.00; //seconds
 	
 	var aircrafts : seq of Aircraft;
 	var minX : real; //m
@@ -22,6 +22,9 @@ abstract
 	
 interface
 	
+	function numberOfAirCrafts : nat
+		^= #aircrafts;
+	
 	function getPairs : set of AircraftPair
 		^= (let s ^= (for i::0..<#aircrafts yield (for j::(i+1)..<#aircrafts yield AircraftPair{aircrafts[i], aircrafts[j]}).ran).ran;
 			flatten(s));
@@ -34,7 +37,7 @@ interface
 		//!!assert #result = ((#aircrafts)*(#aircrafts-1)/2);
 
 	function printConflicts : string
-		^= getConflictsString(conflicts.pairs);
+		^= "Number of aircrafts in system: " ++ numberOfAirCrafts.toString ++ "\n" ++ getConflictsString(conflicts.pairs);
 		
 	function getConflictsString(cons : set of pair of(AircraftPair, ConflictStatus)) : string
 		decrease #cons
@@ -47,12 +50,11 @@ interface
 	
 	function willAircraftBeInBoundryAfterFlying(aircraft : Aircraft) : bool
 		^= (let endPosition ^= aircraft.positionAfterFlying(defaultTimeToFlyFor);
-			minX <= endPosition.x <= maxX & minY <= endPosition.y <= maxY);
+			((minX <= endPosition.x <= maxX) & (minY <= endPosition.y <= maxY)));
 	
 	schema !dropIfLeavesBoundaryAfterFlying
 		//pre ~willAllAircraftsBeInBoundaryAfterFlying
-		post (let craftsToRemove ^= (those a::aircrafts :- ~willAircraftBeInBoundryAfterFlying(a));
-			  aircrafts != (those x::aircrafts :- x ~in craftsToRemove))
+		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a))
 		assert forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY;
 	
 	schema !fly

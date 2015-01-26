@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/CASystem.pd'
-//* by Perfect Developer version 6.10.01 at 14:22:42 UTC on Monday January 26th 2015
+//* by Perfect Developer version 6.10.01 at 15:17:08 UTC on Monday January 26th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfDC3D.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfB282.tmp
 //***********************************************************************************************
 
 package cas;
@@ -97,65 +97,72 @@ public class CASystem extends _eAny
         _lc_CASystem (_lArg);
     }
 
-    protected final static double defaultTimeToFlyFor = 60.0;
+    protected final static double defaultTimeToFlyFor = 1.0;
     protected _eSeq aircrafts;
     protected double minX;
     protected double maxX;
     protected double minY;
     protected double maxY;
+    public int numberOfAirCrafts ()
+    {
+        return aircrafts._oHash ();
+    }
+
     public _eSet getPairs ()
     {
-        _eSeq _vForYield_26_22 = new _eSeq ();
+        _eSeq _vForYield_29_22 = new _eSeq ();
         {
-            int _vCaptureCount_i_26_34 = aircrafts._oHash ();
-            int _vLoopCounter_26_27 = 0;
+            int _vCaptureCount_i_29_34 = aircrafts._oHash ();
+            int _vLoopCounter_29_27 = 0;
             for (;;)
             {
-                if ((_vCaptureCount_i_26_34 <= _vLoopCounter_26_27)) break;
-                _eSeq _vForYield_26_51 = new _eSeq ();
+                if ((_vCaptureCount_i_29_34 <= _vLoopCounter_29_27)) break;
+                _eSeq _vForYield_29_51 = new _eSeq ();
                 {
-                    int _vCaptureCount_j_26_67 = aircrafts._oHash ();
-                    int _vLoopCounter_26_56 = (1 + _vLoopCounter_26_27);
+                    int _vCaptureCount_j_29_67 = aircrafts._oHash ();
+                    int _vLoopCounter_29_56 = (1 + _vLoopCounter_29_27);
                     for (;;)
                     {
-                        if ((_vCaptureCount_j_26_67 <= _vLoopCounter_26_56)) break;
-                        _vForYield_26_51 = _vForYield_26_51.append (((_eAny) new AircraftPair (((
-                            Aircraft) aircrafts._oIndex (_vLoopCounter_26_27)), ((Aircraft)
-                            aircrafts._oIndex (_vLoopCounter_26_56)))));
-                        _vLoopCounter_26_56 = _eSystem._oSucc (_vLoopCounter_26_56);
+                        if ((_vCaptureCount_j_29_67 <= _vLoopCounter_29_56)) break;
+                        _vForYield_29_51 = _vForYield_29_51.append (((_eAny) new AircraftPair (((
+                            Aircraft) aircrafts._oIndex (_vLoopCounter_29_27)), ((Aircraft)
+                            aircrafts._oIndex (_vLoopCounter_29_56)))));
+                        _vLoopCounter_29_56 = _eSystem._oSucc (_vLoopCounter_29_56);
                     }
                 }
-                _vForYield_26_22 = _vForYield_26_22.append (((_eAny) _vForYield_26_51.ran ()));
-                _vLoopCounter_26_27 = _eSystem._oSucc (_vLoopCounter_26_27);
+                _vForYield_29_22 = _vForYield_29_22.append (((_eAny) _vForYield_29_51.ran ()));
+                _vLoopCounter_29_27 = _eSystem._oSucc (_vLoopCounter_29_27);
             }
         }
-        _eSet _vLet_s_26_17 = _vForYield_26_22.ran ();
-        return Ertsys.RtsGlobals.flatten (_vLet_s_26_17, (_eSet) null, (_eTemplate_0) null);
+        _eSet _vLet_s_29_17 = _vForYield_29_22.ran ();
+        return Ertsys.RtsGlobals.flatten (_vLet_s_29_17, (_eSet) null, (_eTemplate_0) null);
     }
 
     public _eMap conflicts ()
     {
-        _eSet _vLet_pairs_31_17 = getPairs ();
-        _eSet _vForYield_32_53 = new _eSet ();
+        _eSet _vLet_pairs_34_17 = getPairs ();
+        _eSet _vForYield_35_53 = new _eSet ();
         {
-            int _vCaptureCount_p_32_61 = _vLet_pairs_31_17._oHash ();
-            int _vLoopCounter_32_58 = 0;
+            int _vCaptureCount_p_35_61 = _vLet_pairs_34_17._oHash ();
+            int _vLoopCounter_35_58 = 0;
             for (;;)
             {
-                if ((_vLoopCounter_32_58 == _vCaptureCount_p_32_61)) break;
-                _vForYield_32_53 = _vForYield_32_53.append (((_eAny) new _ePair (_vLet_pairs_31_17.
-                    _oIndex (_vLoopCounter_32_58), ((_eAny) new ConflictStatus (((AircraftPair)
-                    _vLet_pairs_31_17._oIndex (_vLoopCounter_32_58)).getConflictStatus ())))));
-                _vLoopCounter_32_58 = _eSystem._oSucc (_vLoopCounter_32_58);
+                if ((_vLoopCounter_35_58 == _vCaptureCount_p_35_61)) break;
+                _vForYield_35_53 = _vForYield_35_53.append (((_eAny) new _ePair (_vLet_pairs_34_17.
+                    _oIndex (_vLoopCounter_35_58), ((_eAny) new ConflictStatus (((AircraftPair)
+                    _vLet_pairs_34_17._oIndex (_vLoopCounter_35_58)).getConflictStatus ())))));
+                _vLoopCounter_35_58 = _eSystem._oSucc (_vLoopCounter_35_58);
             }
         }
-        return new _eMap (_vForYield_32_53, (_ePair) null, (_eTemplate_0) null, (_eTemplate_1) null);
+        return new _eMap (_vForYield_35_53, (_ePair) null, (_eTemplate_0) null, (_eTemplate_1) null);
     }
 
     public _eSeq printConflicts ()
     {
-        return getConflictsString (conflicts ().pairs (), (_ePair) null, (AircraftPair) null, (
-            ConflictStatus) null);
+        return _eSystem._lString ("Number of aircrafts in system: ")._oPlusPlus (_eSystem._ltoString
+            (numberOfAirCrafts ()), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("\n"), (
+            _eTemplate_0) null)._oPlusPlus (getConflictsString (conflicts ().pairs (), (_ePair) null,
+            (AircraftPair) null, (ConflictStatus) null), (_eTemplate_0) null);
     }
 
     public _eSeq getConflictsString (_eSet cons, _ePair _t0cons, AircraftPair _t1cons,
@@ -167,28 +174,28 @@ public class CASystem extends _eAny
         }
         else
         {
-            _ePair _vThatAny_42_28 = null;
+            _ePair _vThatAny_45_28 = null;
             {
-                boolean _vSelectorCondition_42_28;
-                _vSelectorCondition_42_28 = false;
-                int _vCaptureCount_k_42_35 = cons._oHash ();
-                int _vLoopCounter_42_32 = 0;
+                boolean _vSelectorCondition_45_28;
+                _vSelectorCondition_45_28 = false;
+                int _vCaptureCount_k_45_35 = cons._oHash ();
+                int _vLoopCounter_45_32 = 0;
                 for (;;)
                 {
-                    if (((_vLoopCounter_42_32 == _vCaptureCount_k_42_35) ||
-                        _vSelectorCondition_42_28)) break;
-                    _vSelectorCondition_42_28 = ((_ePair) cons._oIndex (_vLoopCounter_42_32)).
-                        _lEqual (((_ePair) cons._oIndex (_vLoopCounter_42_32)));
-                    if (_vSelectorCondition_42_28)
+                    if (((_vLoopCounter_45_32 == _vCaptureCount_k_45_35) ||
+                        _vSelectorCondition_45_28)) break;
+                    _vSelectorCondition_45_28 = ((_ePair) cons._oIndex (_vLoopCounter_45_32)).
+                        _lEqual (((_ePair) cons._oIndex (_vLoopCounter_45_32)));
+                    if (_vSelectorCondition_45_28)
                     {
-                        _vThatAny_42_28 = ((_ePair) cons._oIndex (_vLoopCounter_42_32));
+                        _vThatAny_45_28 = ((_ePair) cons._oIndex (_vLoopCounter_45_32));
                     }
-                    if (_vSelectorCondition_42_28)
+                    if (_vSelectorCondition_45_28)
                     {
                     }
                     else
                     {
-                        _vLoopCounter_42_32 = _eSystem._oSucc (_vLoopCounter_42_32);
+                        _vLoopCounter_45_32 = _eSystem._oSucc (_vLoopCounter_45_32);
                     }
                 }
                 if (_eSystem.enableThatOrAny && _eSystem.currentCheckNesting <= _eSystem.
@@ -197,7 +204,7 @@ public class CASystem extends _eAny
                     _eSystem.currentCheckNesting ++;
                     try
                     {
-                        if (!(_vSelectorCondition_42_28)) throw new _xThatOrAny ("CASystem.pd:42,28")
+                        if (!(_vSelectorCondition_45_28)) throw new _xThatOrAny ("CASystem.pd:45,28")
                             ;
                     }
                     catch (_xCannotEvaluate _lException)
@@ -206,110 +213,93 @@ public class CASystem extends _eAny
                     _eSystem.currentCheckNesting --;
                 }
             }
-            _ePair _vLet_c_42_23 = _vThatAny_42_28;
-            return _eSystem._lString ("Pair \n")._oPlusPlus (((AircraftPair) _vLet_c_42_23.x).
+            _ePair _vLet_c_45_23 = _vThatAny_45_28;
+            return _eSystem._lString ("Pair \n")._oPlusPlus (((AircraftPair) _vLet_c_45_23.x).
                 _rtoString (), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("\n Status: "), (
                 _eTemplate_0) null)._oPlusPlus (ConflictStatus._ltoString (((ConflictStatus)
-                _vLet_c_42_23.y).value), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("\n"),
+                _vLet_c_45_23.y).value), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("\n"),
                 (_eTemplate_0) null)._oPlusPlus (getConflictsString (cons.remove (((_eAny)
-                _vLet_c_42_23)), (_ePair) null, (AircraftPair) null, (ConflictStatus) null), (
+                _vLet_c_45_23)), (_ePair) null, (AircraftPair) null, (ConflictStatus) null), (
                 _eTemplate_0) null);
         }
     }
 
     public boolean willAllAircraftsBeInBoundaryAfterFlying ()
     {
-        boolean _vQuantifierResult_46_12;
+        boolean _vQuantifierResult_49_12;
         {
-            _vQuantifierResult_46_12 = true;
-            int _vCaptureCount_a_46_22 = aircrafts._oHash ();
-            int _vLoopCounter_46_19 = 0;
+            _vQuantifierResult_49_12 = true;
+            int _vCaptureCount_a_49_22 = aircrafts._oHash ();
+            int _vLoopCounter_49_19 = 0;
             for (;;)
             {
-                if (((_vLoopCounter_46_19 == _vCaptureCount_a_46_22) || (!_vQuantifierResult_46_12)))
+                if (((_vLoopCounter_49_19 == _vCaptureCount_a_49_22) || (!_vQuantifierResult_49_12)))
                     break;
-                _vQuantifierResult_46_12 = willAircraftBeInBoundryAfterFlying (((Aircraft) aircrafts
-                    ._oIndex (_vLoopCounter_46_19)));
-                if ((!_vQuantifierResult_46_12))
+                _vQuantifierResult_49_12 = willAircraftBeInBoundryAfterFlying (((Aircraft) aircrafts
+                    ._oIndex (_vLoopCounter_49_19)));
+                if ((!_vQuantifierResult_49_12))
                 {
                 }
                 else
                 {
-                    _vLoopCounter_46_19 = _eSystem._oSucc (_vLoopCounter_46_19);
+                    _vLoopCounter_49_19 = _eSystem._oSucc (_vLoopCounter_49_19);
                 }
             }
         }
-        return _vQuantifierResult_46_12;
+        return _vQuantifierResult_49_12;
     }
 
     public boolean willAircraftBeInBoundryAfterFlying (Aircraft aircraft)
     {
-        Vector _vLet_endPosition_49_17 = aircraft.positionAfterFlying (CASystem.defaultTimeToFlyFor);
-        return (((minX <= _vLet_endPosition_49_17.x) && (_vLet_endPosition_49_17.x <= maxX)) && ((
-            minY <= _vLet_endPosition_49_17.y) && (_vLet_endPosition_49_17.y <= maxY)));
+        Vector _vLet_endPosition_52_17 = aircraft.positionAfterFlying (CASystem.defaultTimeToFlyFor);
+        return (((minX <= _vLet_endPosition_52_17.x) && (_vLet_endPosition_52_17.x <= maxX)) && ((
+            minY <= _vLet_endPosition_52_17.y) && (_vLet_endPosition_52_17.y <= maxY)));
     }
 
     public void dropIfLeavesBoundaryAfterFlying ()
     {
         {
-            _eSeq _vThose_54_37 = new _eSeq ();
+            _eSeq _vThose_57_27 = new _eSeq ();
             {
-                int _vCaptureCount_a_54_47 = aircrafts._oHash ();
-                int _vLoopCounter_54_44 = 0;
+                int _vCaptureCount_a_57_37 = aircrafts._oHash ();
+                int _vLoopCounter_57_34 = 0;
                 for (;;)
                 {
-                    if ((_vLoopCounter_54_44 == _vCaptureCount_a_54_47)) break;
-                    if ((!willAircraftBeInBoundryAfterFlying (((Aircraft) aircrafts._oIndex (
-                        _vLoopCounter_54_44)))))
+                    if ((_vLoopCounter_57_34 == _vCaptureCount_a_57_37)) break;
+                    if (willAircraftBeInBoundryAfterFlying (((Aircraft) aircrafts._oIndex (
+                        _vLoopCounter_57_34))))
                     {
-                        _vThose_54_37 = _vThose_54_37.append (aircrafts._oIndex (_vLoopCounter_54_44)
+                        _vThose_57_27 = _vThose_57_27.append (aircrafts._oIndex (_vLoopCounter_57_34)
                             );
                     }
-                    _vLoopCounter_54_44 = _eSystem._oSucc (_vLoopCounter_54_44);
+                    _vLoopCounter_57_34 = _eSystem._oSucc (_vLoopCounter_57_34);
                 }
             }
-            _eSeq _vLet_craftsToRemove_54_19 = _vThose_54_37;
-            _eSeq _vThose_55_28 = new _eSeq ();
-            {
-                int _vCaptureCount_x_55_38 = aircrafts._oHash ();
-                int _vLoopCounter_55_35 = 0;
-                for (;;)
-                {
-                    if ((_vLoopCounter_55_35 == _vCaptureCount_x_55_38)) break;
-                    if ((!_vLet_craftsToRemove_54_19._ovIn (aircrafts._oIndex (_vLoopCounter_55_35)))
-                        )
-                    {
-                        _vThose_55_28 = _vThose_55_28.append (aircrafts._oIndex (_vLoopCounter_55_35)
-                            );
-                    }
-                    _vLoopCounter_55_35 = _eSystem._oSucc (_vLoopCounter_55_35);
-                }
-            }
-            aircrafts = _vThose_55_28;
+            aircrafts = _vThose_57_27;
         }
-        _lClassInvariantCheck ("CASystem.pd:54,14");
+        _lClassInvariantCheck ("CASystem.pd:57,14");
     }
 
     public void fly ()
     {
         dropIfLeavesBoundaryAfterFlying ();
         {
-            _eSeq _vForYield_60_27 = new _eSeq ();
+            _eSeq _vForYield_62_27 = new _eSeq ();
             {
-                int _vCaptureCount_craft_60_39 = aircrafts._oHash ();
-                int _vLoopCounter_60_32 = 0;
+                int _vCaptureCount_craft_62_39 = aircrafts._oHash ();
+                int _vLoopCounter_62_32 = 0;
                 for (;;)
                 {
-                    if ((_vLoopCounter_60_32 == _vCaptureCount_craft_60_39)) break;
-                    _vForYield_60_27 = _vForYield_60_27.append (((_eAny) ((Aircraft) aircrafts.
-                        _oIndex (_vLoopCounter_60_32)).getCraftAfterFlying (CASystem.
+                    if ((_vLoopCounter_62_32 == _vCaptureCount_craft_62_39)) break;
+                    _vForYield_62_27 = _vForYield_62_27.append (((_eAny) ((Aircraft) aircrafts.
+                        _oIndex (_vLoopCounter_62_32)).getCraftAfterFlying (CASystem.
                         defaultTimeToFlyFor)));
-                    _vLoopCounter_60_32 = _eSystem._oSucc (_vLoopCounter_60_32);
+                    _vLoopCounter_62_32 = _eSystem._oSucc (_vLoopCounter_62_32);
                 }
             }
-            aircrafts = _vForYield_60_27;
+            aircrafts = _vForYield_62_27;
         }
-        _lClassInvariantCheck ("CASystem.pd:59,19");
+        _lClassInvariantCheck ("CASystem.pd:61,19");
     }
 
     public CASystem (_eSeq _vaircrafts, Aircraft _t0_vaircrafts, double _vminX, double _vmaxX,
@@ -321,69 +311,69 @@ public class CASystem extends _eAny
             _eSystem.currentCheckNesting ++;
             try
             {
-                boolean _vCondResult_65_13;
+                boolean _vCondResult_67_13;
                 if (((_vminX < _vmaxX) && (_vminY < _vmaxY)))
                 {
-                    boolean _vQuantifierResult_65_15;
+                    boolean _vQuantifierResult_67_15;
                     {
-                        _vQuantifierResult_65_15 = true;
-                        int _vCaptureCount_a_65_26 = _vaircrafts._oHash ();
-                        int _vLoopCounter_65_23 = 0;
+                        _vQuantifierResult_67_15 = true;
+                        int _vCaptureCount_a_67_26 = _vaircrafts._oHash ();
+                        int _vLoopCounter_67_23 = 0;
                         for (;;)
                         {
-                            if (((_vLoopCounter_65_23 == _vCaptureCount_a_65_26) || (!
-                                _vQuantifierResult_65_15))) break;
-                            _vQuantifierResult_65_15 = (1 == _vaircrafts._ovHash (_vaircrafts.
-                                _oIndex (_vLoopCounter_65_23)));
-                            if ((!_vQuantifierResult_65_15))
+                            if (((_vLoopCounter_67_23 == _vCaptureCount_a_67_26) || (!
+                                _vQuantifierResult_67_15))) break;
+                            _vQuantifierResult_67_15 = (1 == _vaircrafts._ovHash (_vaircrafts.
+                                _oIndex (_vLoopCounter_67_23)));
+                            if ((!_vQuantifierResult_67_15))
                             {
                             }
                             else
                             {
-                                _vLoopCounter_65_23 = _eSystem._oSucc (_vLoopCounter_65_23);
+                                _vLoopCounter_67_23 = _eSystem._oSucc (_vLoopCounter_67_23);
                             }
                         }
                     }
-                    _vCondResult_65_13 = _vQuantifierResult_65_15;
+                    _vCondResult_67_13 = _vQuantifierResult_67_15;
                 }
                 else
                 {
-                    _vCondResult_65_13 = false;
+                    _vCondResult_67_13 = false;
                 }
-                boolean _vCondResult_66_13;
-                if (_vCondResult_65_13)
+                boolean _vCondResult_68_13;
+                if (_vCondResult_67_13)
                 {
-                    boolean _vQuantifierResult_66_15;
+                    boolean _vQuantifierResult_68_15;
                     {
-                        _vQuantifierResult_66_15 = true;
-                        int _vCaptureCount_a_66_26 = _vaircrafts._oHash ();
-                        int _vLoopCounter_66_23 = 0;
+                        _vQuantifierResult_68_15 = true;
+                        int _vCaptureCount_a_68_26 = _vaircrafts._oHash ();
+                        int _vLoopCounter_68_23 = 0;
                         for (;;)
                         {
-                            if (((_vLoopCounter_66_23 == _vCaptureCount_a_66_26) || (!
-                                _vQuantifierResult_66_15))) break;
-                            _vQuantifierResult_66_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
-                                (_vLoopCounter_66_23)).position.x) && (((Aircraft) _vaircrafts.
-                                _oIndex (_vLoopCounter_66_23)).position.x <= _vmaxX)) && ((_vminY <=
-                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_66_23)).position.y)
-                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_66_23)).position.
+                            if (((_vLoopCounter_68_23 == _vCaptureCount_a_68_26) || (!
+                                _vQuantifierResult_68_15))) break;
+                            _vQuantifierResult_68_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
+                                (_vLoopCounter_68_23)).position.x) && (((Aircraft) _vaircrafts.
+                                _oIndex (_vLoopCounter_68_23)).position.x <= _vmaxX)) && ((_vminY <=
+                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_68_23)).position.y)
+                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_68_23)).position.
                                 y <= _vmaxY)));
-                            if ((!_vQuantifierResult_66_15))
+                            if ((!_vQuantifierResult_68_15))
                             {
                             }
                             else
                             {
-                                _vLoopCounter_66_23 = _eSystem._oSucc (_vLoopCounter_66_23);
+                                _vLoopCounter_68_23 = _eSystem._oSucc (_vLoopCounter_68_23);
                             }
                         }
                     }
-                    _vCondResult_66_13 = _vQuantifierResult_66_15;
+                    _vCondResult_68_13 = _vQuantifierResult_68_15;
                 }
                 else
                 {
-                    _vCondResult_66_13 = false;
+                    _vCondResult_68_13 = false;
                 }
-                if (!(_vCondResult_66_13)) throw new _xPre ("CASystem.pd:66,13");
+                if (!(_vCondResult_68_13)) throw new _xPre ("CASystem.pd:68,13");
             }
             catch (_xCannotEvaluate _lException)
             {
@@ -395,7 +385,7 @@ public class CASystem extends _eAny
         maxX = _vmaxX;
         minY = _vminY;
         maxY = _vmaxY;
-        _lc_CASystem ("CASystem.pd:62,5");
+        _lc_CASystem ("CASystem.pd:64,5");
     }
 
     public boolean _lEqual (CASystem _vArg_10_11)

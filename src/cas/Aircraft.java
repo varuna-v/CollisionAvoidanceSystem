@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Aircraft.pd'
-//* by Perfect Developer version 6.10.01 at 14:22:42 UTC on Monday January 26th 2015
+//* by Perfect Developer version 6.10.01 at 15:17:08 UTC on Monday January 26th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfDC3D.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfB282.tmp
 //***********************************************************************************************
 
 package cas;
@@ -89,9 +89,9 @@ public class Aircraft extends _eAny
 
     public boolean isInConflictWith (Aircraft other)
     {
-        return (position.getTwoDimensionalDistanceFrom (other.position) < ((other.boundaryRadius <
-            boundaryRadius) ?
-        boundaryRadius : other.boundaryRadius));
+        double _vLet_biggerRadius_37_17 = ((other.boundaryRadius < boundaryRadius) ?
+        boundaryRadius : other.boundaryRadius);
+        return (position.getTwoDimensionalDistanceFrom (other.position) <= _vLet_biggerRadius_37_17);
     }
 
     public boolean potentialFutureConflict (Aircraft other)
@@ -102,7 +102,7 @@ public class Aircraft extends _eAny
             try
             {
                 if (!(((!isInConflictWith (other)) && (!velocity._lEqual (other.velocity))))) throw
-                    new _xPre ("Aircraft.pd:41,13");
+                    new _xPre ("Aircraft.pd:42,13");
             }
             catch (_xCannotEvaluate _lException)
             {
@@ -121,16 +121,16 @@ public class Aircraft extends _eAny
             try
             {
                 if (!(((!isInConflictWith (other)) && (!velocity._lEqual (other.velocity))))) throw
-                    new _xPre ("Aircraft.pd:45,13");
+                    new _xPre ("Aircraft.pd:46,13");
             }
             catch (_xCannotEvaluate _lException)
             {
             }
             _eSystem.currentCheckNesting --;
         }
-        Vector _vLet_velocityDifference_46_17 = other.velocity._oMinus (velocity);
+        Vector _vLet_velocityDifference_47_17 = other.velocity._oMinus (velocity);
         return _eSystem._oDiv (position._oMinus (other.position).dotProduct (
-            _vLet_velocityDifference_46_17), _eSystem._oExp (_vLet_velocityDifference_46_17.
+            _vLet_velocityDifference_47_17), _eSystem._oExp (_vLet_velocityDifference_47_17.
             magnitude (), 2));
     }
 
@@ -141,16 +141,16 @@ public class Aircraft extends _eAny
             _eSystem.currentCheckNesting ++;
             try
             {
-                if (!((!isInConflictWith (other)))) throw new _xPre ("Aircraft.pd:52,13");
+                if (!((!isInConflictWith (other)))) throw new _xPre ("Aircraft.pd:53,13");
             }
             catch (_xCannotEvaluate _lException)
             {
             }
             _eSystem.currentCheckNesting --;
         }
-        double _vLet_biggerRadius_53_17 = ((other.boundaryRadius < boundaryRadius) ?
+        double _vLet_biggerRadius_54_17 = ((other.boundaryRadius < boundaryRadius) ?
         boundaryRadius : other.boundaryRadius);
-        return _eSystem._oDiv (_vLet_biggerRadius_53_17, (speed () + other.speed ()));
+        return _eSystem._oDiv (_vLet_biggerRadius_54_17, (speed () + other.speed ()));
     }
 
     public Vector positionAfterFlying (double time)
@@ -182,7 +182,7 @@ public class Aircraft extends _eAny
             {
                 if (!((((_vposition.type == VectorType.Position) && (_vvelocity.type == VectorType.
                     Velocity)) && (!_videntification.empty ())))) throw new _xPre (
-                    "Aircraft.pd:70,28");
+                    "Aircraft.pd:71,28");
             }
             catch (_xCannotEvaluate _lException)
             {
@@ -194,7 +194,7 @@ public class Aircraft extends _eAny
         boundaryRadius = _vboundaryRadius;
         status = _vstatus;
         identification = _videntification;
-        _lc_Aircraft ("Aircraft.pd:69,5");
+        _lc_Aircraft ("Aircraft.pd:70,5");
     }
 
     public boolean _lEqual (Aircraft _vArg_11_11)

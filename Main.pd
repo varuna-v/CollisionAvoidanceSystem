@@ -11,13 +11,13 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
 	pre #args > 0
 	post change context , ret satisfy undefRel(context' , ret') , ret' = 0
 	via
-		let initialCrafts ^= seq of Aircraft {Aircraft {Vector{10.00  , 1000.00 , 21353.00, VectorType Position}, Vector{234.00, 643.00, 0.00, VectorType Velocity}, 50.00, AircraftStatus FlyingAtLevel, "A"},
-											  Aircraft {Vector{67.00  , 5.00 , 3434.00, VectorType Position}, Vector{54.00, 346.00, 0.00, VectorType Velocity}, 20.00, AircraftStatus FlyingAtLevel, "B"},
-											  Aircraft {Vector{879.00 , 664.00, 7834.00, VectorType Position}, Vector{265.00, 786.00, 0.00, VectorType Velocity}, 30.00, AircraftStatus FlyingAtLevel, "C"},
-											  Aircraft {Vector{435.00 , 234.00, 45534.00, VectorType Position}, Vector{3452.00, 324.00, 0.00, VectorType Velocity}, 25.00, AircraftStatus FlyingAtLevel, "D"},
-											  Aircraft {Vector{7568.00, 6675.00, 34456.00, VectorType Position}, Vector{657.00, 675.00, 0.00, VectorType Velocity}, 35.00, AircraftStatus FlyingAtLevel, "E"},
-											  Aircraft {Vector{453.00 , 5753.00, 3468.00, VectorType Position}, Vector{243.00, 165.00, 0.00, VectorType Velocity}, 10.00, AircraftStatus FlyingAtLevel, "F"},
-											  Aircraft {Vector{987.00 , 5342.00, 344.00, VectorType Position}, Vector{364.00, 673.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G"}};
+		let initialCrafts ^= seq of Aircraft {Aircraft {Vector{10.00  , 1000.00 , 21353.00, VectorType Position}, Vector{234.00, 93.00, 0.00, VectorType Velocity}, 50.00, AircraftStatus FlyingAtLevel, "A"},
+											  Aircraft {Vector{67.00  , 5.00 , 3434.00, VectorType Position}, Vector{54.00, 146.00, 0.00, VectorType Velocity}, 20.00, AircraftStatus FlyingAtLevel, "B"},
+											  Aircraft {Vector{879.00 , 664.00, 7834.00, VectorType Position}, Vector{265.00, 86.00, 0.00, VectorType Velocity}, 30.00, AircraftStatus FlyingAtLevel, "C"},
+											  Aircraft {Vector{435.00 , 234.00, 45534.00, VectorType Position}, Vector{342.00, 134.00, 0.00, VectorType Velocity}, 25.00, AircraftStatus FlyingAtLevel, "D"},
+											  Aircraft {Vector{7568.00, 6675.00, 34456.00, VectorType Position}, Vector{57.00, 75.00, 0.00, VectorType Velocity}, 35.00, AircraftStatus FlyingAtLevel, "E"},
+											  Aircraft {Vector{453.00 , 5753.00, 3468.00, VectorType Position}, Vector{23.00, 105.00, 0.00, VectorType Velocity}, 10.00, AircraftStatus FlyingAtLevel, "F"},
+											  Aircraft {Vector{987.00 , 5342.00, 344.00, VectorType Position}, Vector{364.00, 63.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G"}};
 		var system : CASystem != CASystem{initialCrafts, 0.00, 10000.00, 0.00, 10000.00};
         context!print("System booted\n") ;
         loop
@@ -28,11 +28,12 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
             decrease count' ;
                 var line : string ,
                     rret : FileError ;
-                count! - 1 ;
+                count! - 1 ,
+				context!print(system.printConflicts ++ "\n----------------\n");
+				system!fly;
                 context!readLine(line! , rret!) ;
-                if [line="X"] : count != 0;
-                   [] : context!print(system.printConflicts);
-						system!fly
+                if [line="X" | system.numberOfAirCrafts = 0] : count != 0;
+					[]
                 fi
         end ;
 		ret! = 0;

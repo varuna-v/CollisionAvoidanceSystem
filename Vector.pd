@@ -27,7 +27,7 @@ interface
 	
 	function getTwoDimensionalDistanceFrom(other : Vector) : real //!!
 		pre type = VectorType Position & other.type = VectorType Position
-		^= (((x-other.x)^2) + ((y-other.y)^2)) ^ (1/2);
+		^= (((x-other.x)^2) + ((y-other.y)^2)) ^ (0.5);
 	
 	//!!function getDistanceFrom(other : Vector)  : real
 		//pre type = VectorType Position & other.type = VectorType Position
