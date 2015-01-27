@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Main.pd'
-//* by Perfect Developer version 6.10.01 at 15:17:09 UTC on Monday January 26th 2015
+//* by Perfect Developer version 6.10.01 at 15:47:59 UTC on Tuesday January 27th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfB282.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfC60.tmp
 //***********************************************************************************************
 
 package cas;
@@ -55,8 +55,8 @@ final class _jMain
             (VectorType) null), new Vector (364.0, 63.0, 0.0, VectorType.Velocity, (VectorType) null)
             , 5.0, AircraftStatus.FlyingAtLevel, (AircraftStatus) null, _eSystem._lString ("G"), (
             char) 0)));
-        CASystem system = new CASystem (_vLet_initialCrafts_14_13, (Aircraft) null, 0.0, 10000.0,
-            0.0, 10000.0);
+        AirTrafficController system = new AirTrafficController (_vLet_initialCrafts_14_13, (Aircraft)
+            null, 0.0, 10000.0, 0.0, 10000.0);
         context.print (_eSystem._lString ("System booted\n"), (char) 0);
         {
             int count = 30;
@@ -68,7 +68,7 @@ final class _jMain
                 count -= 1;
                 context.print (system.printConflicts ()._oPlusPlus (_eSystem._lString (
                     "\n----------------\n"), (_eTemplate_0) null), (char) 0);
-                system = ((CASystem) system._lClone ());
+                system = ((AirTrafficController) system._lClone ());
                 system.fly ();
                 {
                     _eWrapper__eAny _vSchemaCallTemp_34_34 = new _eWrapper__eAny ();

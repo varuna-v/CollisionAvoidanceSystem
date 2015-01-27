@@ -18,7 +18,7 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
 											  Aircraft {Vector{7568.00, 6675.00, 34456.00, VectorType Position}, Vector{57.00, 75.00, 0.00, VectorType Velocity}, 35.00, AircraftStatus FlyingAtLevel, "E"},
 											  Aircraft {Vector{453.00 , 5753.00, 3468.00, VectorType Position}, Vector{23.00, 105.00, 0.00, VectorType Velocity}, 10.00, AircraftStatus FlyingAtLevel, "F"},
 											  Aircraft {Vector{987.00 , 5342.00, 344.00, VectorType Position}, Vector{364.00, 63.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G"}};
-		var system : CASystem != CASystem{initialCrafts, 0.00, 10000.00, 0.00, 10000.00};
+		var system : AirTrafficController != AirTrafficController{initialCrafts, 0.00, 10000.00, 0.00, 10000.00};
         context!print("System booted\n") ;
         loop
     	    var count : nat! = 30 ;

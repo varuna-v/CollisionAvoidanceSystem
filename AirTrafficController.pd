@@ -1,10 +1,10 @@
 //*******************************************************
-//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/CASystem.pd
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/AirTrafficController.pd
 //* Author:  Varuna
 //* Created: 14:39:29 on Sunday January 25th 2015 UTC
 //*******************************************************
 
-class CASystem ^=
+class AirTrafficController ^=
 abstract
 	
 	const defaultTimeToFlyFor ^= 1.00; //seconds
