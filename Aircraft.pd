@@ -9,12 +9,14 @@ abstract
 
 	//Time added to hypothetical time to get maximum time before potential conflict is declared
 	const safteyTime ^= 300.00; //seconds
+	const verticalBreakPoint ^= 8800.00; //meters
 	
 	var position : Vector;
 	var velocity : Vector; // km or m per sec
 	var boundaryRadius : real; // km or m as above
 	var status : AircraftStatus;
 	var identification : string;
+	var conflictStatus : ConflictStatus;
 	
 	invariant position.type = VectorType Position;
 	invariant velocity.type = VectorType Velocity;
@@ -22,16 +24,29 @@ abstract
 	
 interface	
 
+	function conflictStatus;
+	
 	function position;
+	
+	function velocity;
+	
+	function boundaryRadius;
 	
 	function speed : real
 		^= velocity.magnitude;
 		
 	function getConflictStatus(other : Aircraft) : ConflictStatus
-		^= ([isInConflictWith(other)] : ConflictStatus Conflicted,
-					  [other.velocity ~= velocity & potentialFutureConflict(other)] : ConflictStatus PotentialFutureConflict,
-					  [] : ConflictStatus NoConflict);
+		^= ([~breaksMinimumVerticalSeparation(other)] : ConflictStatus NoConflict,
+			[isInConflictWith(other)] : ConflictStatus Conflicted,
+			[other.velocity ~= velocity & potentialFutureConflict(other)] : ConflictStatus PotentialFutureConflict,
+			[] : ConflictStatus NoConflict);
 		 //assert result = other.getConflictStatus(self);
+	
+	function breaksMinimumVerticalSeparation(other : Aircraft) : bool
+		^= (let heightDifference ^= ([other.position.y > position.y] : other.position.y - position.y,
+									[] : position.y - other.position.y);
+			([position.y <= verticalBreakPoint & other.position.y <= verticalBreakPoint] : heightDifference > 300.00, //meters
+			[] : heightDifference > 600.00)); //meters
 	
 	function isInConflictWith(other : Aircraft) : bool
 		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
@@ -62,12 +77,19 @@ interface
 		^= Aircraft {positionAfterFlying(time), velocity, boundaryRadius, status, identification};
 	
 	redefine function toString : string
-		^= "\t Position: " ++ position.toString ++ "\n\t Velocity: " ++ velocity.toString;
+		^= "\t Position: " ++ position.toString ++ "<br>\t Velocity: " ++ velocity.toString ++ "<br>\t Conflict Status: " ++ conflictStatus.toString;
 	
 	//operator =(other : Aircraft) : bool
 	//	^= identification = other.identification;
 	
+	function getCraftWithConflictStatus(cs : ConflictStatus) : Aircraft
+		^= Aircraft{position, velocity, boundaryRadius, status, identification, cs};
+	
 	build{!position : Vector, !velocity : Vector, ! boundaryRadius : real, !status : AircraftStatus, !identification : string}
+		pre  position.type = VectorType Position & velocity.type = VectorType Velocity & ~identification.empty
+		post conflictStatus != ConflictStatus NoConflict;
+		
+	build{!position : Vector, !velocity : Vector, ! boundaryRadius : real, !status : AircraftStatus, !identification : string, !conflictStatus : ConflictStatus}
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity & ~identification.empty;
 	
 end;

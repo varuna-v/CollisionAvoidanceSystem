@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Main.pd'
-//* by Perfect Developer version 6.10.01 at 15:47:59 UTC on Tuesday January 27th 2015
+//* by Perfect Developer version 6.10.01 at 14:04:19 UTC on Friday January 30th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfC60.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etf39F9.tmp
 //***********************************************************************************************
 
 package cas;
@@ -66,7 +66,7 @@ final class _jMain
                 _eSeq line;
                 int rret;
                 count -= 1;
-                context.print (system.printConflicts ()._oPlusPlus (_eSystem._lString (
+                context.print (_jMain.printStuff (system)._oPlusPlus (_eSystem._lString (
                     "\n----------------\n"), (_eTemplate_0) null), (char) 0);
                 system = ((AirTrafficController) system._lClone ());
                 system.fly ();
@@ -88,6 +88,35 @@ final class _jMain
             }
         }
         ret.value = 0;
+    }
+
+    public static _eSeq printStuff (AirTrafficController system)
+    {
+        _eSeq _vForYield_43_18 = new _eSeq ();
+        {
+            int _vCaptureCount_a_43_33 = system.aircrafts._oHash ();
+            int _vLoopCounter_43_23 = 0;
+            for (;;)
+            {
+                if ((_vLoopCounter_43_23 == _vCaptureCount_a_43_33)) break;
+                _vForYield_43_18 = _vForYield_43_18.append (((_eAny) _eSystem._ltoString (((Aircraft)
+                    system.aircrafts._oIndex (_vLoopCounter_43_23)).boundaryRadius)));
+                _vLoopCounter_43_23 = _eSystem._oSucc (_vLoopCounter_43_23);
+            }
+        }
+        _eSeq _vOver_43_12 = new _eSeq ();
+        {
+            int _vLoopCounter_43_12 = 0;
+            for (;;)
+            {
+                if ((_vForYield_43_18._oHash () == _vLoopCounter_43_12)) break;
+                _vOver_43_12 = ((_eSeq) _vOver_43_12._lClone ());
+                _vOver_43_12._osPlusPlus (((_eSeq) _vForYield_43_18._oIndex (_vLoopCounter_43_12)),
+                    (_eTemplate_0) null);
+                _vLoopCounter_43_12 = _eSystem._oSucc (_vLoopCounter_43_12);
+            }
+        }
+        return _vOver_43_12;
     }
 
     public static boolean undefRel (_eAny a, _eAny b)

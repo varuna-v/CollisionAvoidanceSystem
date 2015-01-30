@@ -22,6 +22,8 @@ abstract
 	
 interface
 	
+	function aircrafts;
+	
 	function numberOfAirCrafts : nat
 		^= #aircrafts;
 	
@@ -37,13 +39,13 @@ interface
 		//!!assert #result = ((#aircrafts)*(#aircrafts-1)/2);
 
 	function printConflicts : string
-		^= "Number of aircrafts in system: " ++ numberOfAirCrafts.toString ++ "\n" ++ getConflictsString(conflicts.pairs);
+		^= "Number of aircrafts in system: " ++ numberOfAirCrafts.toString ++ "<br>" ++ getConflictsString(conflicts.pairs);
 		
 	function getConflictsString(cons : set of pair of(AircraftPair, ConflictStatus)) : string
 		decrease #cons
 		^= ([#cons = 0] : "",
 			[] : (let c ^= any k::cons :- k=k;
-				  "Pair \n" ++ c.x.toString ++ "\n Status: " ++ c.y.toString ++ "\n" ++ getConflictsString(cons.remove(c))));
+				  "Pair <br>" ++ c.x.toString ++ "<br> Status: " ++ c.y.toString ++ "<br>" ++ getConflictsString(cons.remove(c))));
 	
 	function willAllAircraftsBeInBoundaryAfterFlying : bool
 		^= forall a::aircrafts :- willAircraftBeInBoundryAfterFlying(a);
@@ -60,6 +62,12 @@ interface
 	schema !fly
 		post self!dropIfLeavesBoundaryAfterFlying then
 			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(defaultTimeToFlyFor));
+													
+    function getConflictStatus(aircraft : Aircraft, incconflicts : map of (AircraftPair -> ConflictStatus)) : ConflictStatus
+		^= (let lst ^= (for those c::incconflicts.pairs :- c.x.craft1 = aircraft | c.x.craft2 = aircraft yield c.y);
+			([ConflictStatus Conflicted in lst] : ConflictStatus Conflicted,
+			 [ConflictStatus PotentialFutureConflict in lst] : ConflictStatus PotentialFutureConflict,
+			 [] : ConflictStatus NoConflict));
 	
 	build{!aircrafts : seq of Aircraft, !minX : real, ! maxX : real, !minY : real, !maxY : real}
 		pre minX < maxX & minY < maxY 

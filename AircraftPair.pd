@@ -26,7 +26,7 @@ interface
 	//^= ((craft1 = other.craft1 & craft2 = other.craft2) | (craft1 = other.craft2 & craft2 = other.craft1));
 
 	redefine function toString : string
-		^=	"Craft 1 \n" ++ craft1.toString ++ "\n Craft 2 \n" ++ craft2.toString; 
+		^=	"Craft 1 <br>" ++ craft1.toString ++ "<br> Craft 2 <br>" ++ craft2.toString; 
 	
 	build{!craft1 : Aircraft, !craft2 : Aircraft}
 		pre craft1 ~= craft2;

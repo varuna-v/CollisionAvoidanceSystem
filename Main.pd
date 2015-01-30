@@ -29,7 +29,7 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
                 var line : string ,
                     rret : FileError ;
                 count! - 1 ,
-				context!print(system.printConflicts ++ "\n----------------\n");
+				context!print(printStuff(system) ++ "\n----------------\n");
 				system!fly;
                 context!readLine(line! , rret!) ;
                 if [line="X" | system.numberOfAirCrafts = 0] : count != 0;
@@ -38,6 +38,9 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
         end ;
 		ret! = 0;
 	end;
+
+	function printStuff(system : AirTrafficController) : string
+		^= ++over(for a::system.aircrafts yield a.boundaryRadius.toString);
 
     function undefRel(a: class A , b: class B): bool
         ^= true ;

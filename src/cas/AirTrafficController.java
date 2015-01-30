@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/AirTrafficController.pd'
-//* by Perfect Developer version 6.10.01 at 15:47:58 UTC on Tuesday January 27th 2015
+//* by Perfect Developer version 6.10.01 at 14:04:19 UTC on Friday January 30th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfC60.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etf39F9.tmp
 //***********************************************************************************************
 
 package cas;
@@ -98,7 +98,7 @@ public class AirTrafficController extends _eAny
     }
 
     protected final static double defaultTimeToFlyFor = 1.0;
-    protected _eSeq aircrafts;
+    public _eSeq aircrafts;
     protected double minX;
     protected double maxX;
     protected double minY;
@@ -110,57 +110,57 @@ public class AirTrafficController extends _eAny
 
     public _eSet getPairs ()
     {
-        _eSeq _vForYield_29_22 = new _eSeq ();
+        _eSeq _vForYield_31_22 = new _eSeq ();
         {
-            int _vCaptureCount_i_29_34 = aircrafts._oHash ();
-            int _vLoopCounter_29_27 = 0;
+            int _vCaptureCount_i_31_34 = aircrafts._oHash ();
+            int _vLoopCounter_31_27 = 0;
             for (;;)
             {
-                if ((_vCaptureCount_i_29_34 <= _vLoopCounter_29_27)) break;
-                _eSeq _vForYield_29_51 = new _eSeq ();
+                if ((_vCaptureCount_i_31_34 <= _vLoopCounter_31_27)) break;
+                _eSeq _vForYield_31_51 = new _eSeq ();
                 {
-                    int _vCaptureCount_j_29_67 = aircrafts._oHash ();
-                    int _vLoopCounter_29_56 = (1 + _vLoopCounter_29_27);
+                    int _vCaptureCount_j_31_67 = aircrafts._oHash ();
+                    int _vLoopCounter_31_56 = (1 + _vLoopCounter_31_27);
                     for (;;)
                     {
-                        if ((_vCaptureCount_j_29_67 <= _vLoopCounter_29_56)) break;
-                        _vForYield_29_51 = _vForYield_29_51.append (((_eAny) new AircraftPair (((
-                            Aircraft) aircrafts._oIndex (_vLoopCounter_29_27)), ((Aircraft)
-                            aircrafts._oIndex (_vLoopCounter_29_56)))));
-                        _vLoopCounter_29_56 = _eSystem._oSucc (_vLoopCounter_29_56);
+                        if ((_vCaptureCount_j_31_67 <= _vLoopCounter_31_56)) break;
+                        _vForYield_31_51 = _vForYield_31_51.append (((_eAny) new AircraftPair (((
+                            Aircraft) aircrafts._oIndex (_vLoopCounter_31_27)), ((Aircraft)
+                            aircrafts._oIndex (_vLoopCounter_31_56)))));
+                        _vLoopCounter_31_56 = _eSystem._oSucc (_vLoopCounter_31_56);
                     }
                 }
-                _vForYield_29_22 = _vForYield_29_22.append (((_eAny) _vForYield_29_51.ran ()));
-                _vLoopCounter_29_27 = _eSystem._oSucc (_vLoopCounter_29_27);
+                _vForYield_31_22 = _vForYield_31_22.append (((_eAny) _vForYield_31_51.ran ()));
+                _vLoopCounter_31_27 = _eSystem._oSucc (_vLoopCounter_31_27);
             }
         }
-        _eSet _vLet_s_29_17 = _vForYield_29_22.ran ();
-        return Ertsys.RtsGlobals.flatten (_vLet_s_29_17, (_eSet) null, (_eTemplate_0) null);
+        _eSet _vLet_s_31_17 = _vForYield_31_22.ran ();
+        return Ertsys.RtsGlobals.flatten (_vLet_s_31_17, (_eSet) null, (_eTemplate_0) null);
     }
 
     public _eMap conflicts ()
     {
-        _eSet _vLet_pairs_34_17 = getPairs ();
-        _eSet _vForYield_35_53 = new _eSet ();
+        _eSet _vLet_pairs_36_17 = getPairs ();
+        _eSet _vForYield_37_53 = new _eSet ();
         {
-            int _vCaptureCount_p_35_61 = _vLet_pairs_34_17._oHash ();
-            int _vLoopCounter_35_58 = 0;
+            int _vCaptureCount_p_37_61 = _vLet_pairs_36_17._oHash ();
+            int _vLoopCounter_37_58 = 0;
             for (;;)
             {
-                if ((_vLoopCounter_35_58 == _vCaptureCount_p_35_61)) break;
-                _vForYield_35_53 = _vForYield_35_53.append (((_eAny) new _ePair (_vLet_pairs_34_17.
-                    _oIndex (_vLoopCounter_35_58), ((_eAny) new ConflictStatus (((AircraftPair)
-                    _vLet_pairs_34_17._oIndex (_vLoopCounter_35_58)).getConflictStatus ())))));
-                _vLoopCounter_35_58 = _eSystem._oSucc (_vLoopCounter_35_58);
+                if ((_vLoopCounter_37_58 == _vCaptureCount_p_37_61)) break;
+                _vForYield_37_53 = _vForYield_37_53.append (((_eAny) new _ePair (_vLet_pairs_36_17.
+                    _oIndex (_vLoopCounter_37_58), ((_eAny) new ConflictStatus (((AircraftPair)
+                    _vLet_pairs_36_17._oIndex (_vLoopCounter_37_58)).getConflictStatus ())))));
+                _vLoopCounter_37_58 = _eSystem._oSucc (_vLoopCounter_37_58);
             }
         }
-        return new _eMap (_vForYield_35_53, (_ePair) null, (_eTemplate_0) null, (_eTemplate_1) null);
+        return new _eMap (_vForYield_37_53, (_ePair) null, (_eTemplate_0) null, (_eTemplate_1) null);
     }
 
     public _eSeq printConflicts ()
     {
         return _eSystem._lString ("Number of aircrafts in system: ")._oPlusPlus (_eSystem._ltoString
-            (numberOfAirCrafts ()), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("\n"), (
+            (numberOfAirCrafts ()), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("<br>"), (
             _eTemplate_0) null)._oPlusPlus (getConflictsString (conflicts ().pairs (), (_ePair) null,
             (AircraftPair) null, (ConflictStatus) null), (_eTemplate_0) null);
     }
@@ -174,28 +174,28 @@ public class AirTrafficController extends _eAny
         }
         else
         {
-            _ePair _vThatAny_45_28 = null;
+            _ePair _vThatAny_47_28 = null;
             {
-                boolean _vSelectorCondition_45_28;
-                _vSelectorCondition_45_28 = false;
-                int _vCaptureCount_k_45_35 = cons._oHash ();
-                int _vLoopCounter_45_32 = 0;
+                boolean _vSelectorCondition_47_28;
+                _vSelectorCondition_47_28 = false;
+                int _vCaptureCount_k_47_35 = cons._oHash ();
+                int _vLoopCounter_47_32 = 0;
                 for (;;)
                 {
-                    if (((_vLoopCounter_45_32 == _vCaptureCount_k_45_35) ||
-                        _vSelectorCondition_45_28)) break;
-                    _vSelectorCondition_45_28 = ((_ePair) cons._oIndex (_vLoopCounter_45_32)).
-                        _lEqual (((_ePair) cons._oIndex (_vLoopCounter_45_32)));
-                    if (_vSelectorCondition_45_28)
+                    if (((_vLoopCounter_47_32 == _vCaptureCount_k_47_35) ||
+                        _vSelectorCondition_47_28)) break;
+                    _vSelectorCondition_47_28 = ((_ePair) cons._oIndex (_vLoopCounter_47_32)).
+                        _lEqual (((_ePair) cons._oIndex (_vLoopCounter_47_32)));
+                    if (_vSelectorCondition_47_28)
                     {
-                        _vThatAny_45_28 = ((_ePair) cons._oIndex (_vLoopCounter_45_32));
+                        _vThatAny_47_28 = ((_ePair) cons._oIndex (_vLoopCounter_47_32));
                     }
-                    if (_vSelectorCondition_45_28)
+                    if (_vSelectorCondition_47_28)
                     {
                     }
                     else
                     {
-                        _vLoopCounter_45_32 = _eSystem._oSucc (_vLoopCounter_45_32);
+                        _vLoopCounter_47_32 = _eSystem._oSucc (_vLoopCounter_47_32);
                     }
                 }
                 if (_eSystem.enableThatOrAny && _eSystem.currentCheckNesting <= _eSystem.
@@ -204,8 +204,8 @@ public class AirTrafficController extends _eAny
                     _eSystem.currentCheckNesting ++;
                     try
                     {
-                        if (!(_vSelectorCondition_45_28)) throw new _xThatOrAny (
-                            "AirTrafficController.pd:45,28");
+                        if (!(_vSelectorCondition_47_28)) throw new _xThatOrAny (
+                            "AirTrafficController.pd:47,28");
                     }
                     catch (_xCannotEvaluate _lException)
                     {
@@ -213,94 +213,122 @@ public class AirTrafficController extends _eAny
                     _eSystem.currentCheckNesting --;
                 }
             }
-            _ePair _vLet_c_45_23 = _vThatAny_45_28;
-            return _eSystem._lString ("Pair \n")._oPlusPlus (((AircraftPair) _vLet_c_45_23.x).
-                _rtoString (), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("\n Status: "), (
-                _eTemplate_0) null)._oPlusPlus (ConflictStatus._ltoString (((ConflictStatus)
-                _vLet_c_45_23.y).value), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("\n"),
+            _ePair _vLet_c_47_23 = _vThatAny_47_28;
+            return _eSystem._lString ("Pair <br>")._oPlusPlus (((AircraftPair) _vLet_c_47_23.x).
+                _rtoString (), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("<br> Status: "),
+                (_eTemplate_0) null)._oPlusPlus (ConflictStatus._ltoString (((ConflictStatus)
+                _vLet_c_47_23.y).value), (_eTemplate_0) null)._oPlusPlus (_eSystem._lString ("<br>"),
                 (_eTemplate_0) null)._oPlusPlus (getConflictsString (cons.remove (((_eAny)
-                _vLet_c_45_23)), (_ePair) null, (AircraftPair) null, (ConflictStatus) null), (
+                _vLet_c_47_23)), (_ePair) null, (AircraftPair) null, (ConflictStatus) null), (
                 _eTemplate_0) null);
         }
     }
 
     public boolean willAllAircraftsBeInBoundaryAfterFlying ()
     {
-        boolean _vQuantifierResult_49_12;
+        boolean _vQuantifierResult_51_12;
         {
-            _vQuantifierResult_49_12 = true;
-            int _vCaptureCount_a_49_22 = aircrafts._oHash ();
-            int _vLoopCounter_49_19 = 0;
+            _vQuantifierResult_51_12 = true;
+            int _vCaptureCount_a_51_22 = aircrafts._oHash ();
+            int _vLoopCounter_51_19 = 0;
             for (;;)
             {
-                if (((_vLoopCounter_49_19 == _vCaptureCount_a_49_22) || (!_vQuantifierResult_49_12)))
+                if (((_vLoopCounter_51_19 == _vCaptureCount_a_51_22) || (!_vQuantifierResult_51_12)))
                     break;
-                _vQuantifierResult_49_12 = willAircraftBeInBoundryAfterFlying (((Aircraft) aircrafts
-                    ._oIndex (_vLoopCounter_49_19)));
-                if ((!_vQuantifierResult_49_12))
+                _vQuantifierResult_51_12 = willAircraftBeInBoundryAfterFlying (((Aircraft) aircrafts
+                    ._oIndex (_vLoopCounter_51_19)));
+                if ((!_vQuantifierResult_51_12))
                 {
                 }
                 else
                 {
-                    _vLoopCounter_49_19 = _eSystem._oSucc (_vLoopCounter_49_19);
+                    _vLoopCounter_51_19 = _eSystem._oSucc (_vLoopCounter_51_19);
                 }
             }
         }
-        return _vQuantifierResult_49_12;
+        return _vQuantifierResult_51_12;
     }
 
     public boolean willAircraftBeInBoundryAfterFlying (Aircraft aircraft)
     {
-        Vector _vLet_endPosition_52_17 = aircraft.positionAfterFlying (AirTrafficController.
+        Vector _vLet_endPosition_54_17 = aircraft.positionAfterFlying (AirTrafficController.
             defaultTimeToFlyFor);
-        return (((minX <= _vLet_endPosition_52_17.x) && (_vLet_endPosition_52_17.x <= maxX)) && ((
-            minY <= _vLet_endPosition_52_17.y) && (_vLet_endPosition_52_17.y <= maxY)));
+        return (((minX <= _vLet_endPosition_54_17.x) && (_vLet_endPosition_54_17.x <= maxX)) && ((
+            minY <= _vLet_endPosition_54_17.y) && (_vLet_endPosition_54_17.y <= maxY)));
     }
 
     public void dropIfLeavesBoundaryAfterFlying ()
     {
         {
-            _eSeq _vThose_57_27 = new _eSeq ();
+            _eSeq _vThose_59_27 = new _eSeq ();
             {
-                int _vCaptureCount_a_57_37 = aircrafts._oHash ();
-                int _vLoopCounter_57_34 = 0;
+                int _vCaptureCount_a_59_37 = aircrafts._oHash ();
+                int _vLoopCounter_59_34 = 0;
                 for (;;)
                 {
-                    if ((_vLoopCounter_57_34 == _vCaptureCount_a_57_37)) break;
+                    if ((_vLoopCounter_59_34 == _vCaptureCount_a_59_37)) break;
                     if (willAircraftBeInBoundryAfterFlying (((Aircraft) aircrafts._oIndex (
-                        _vLoopCounter_57_34))))
+                        _vLoopCounter_59_34))))
                     {
-                        _vThose_57_27 = _vThose_57_27.append (aircrafts._oIndex (_vLoopCounter_57_34)
+                        _vThose_59_27 = _vThose_59_27.append (aircrafts._oIndex (_vLoopCounter_59_34)
                             );
                     }
-                    _vLoopCounter_57_34 = _eSystem._oSucc (_vLoopCounter_57_34);
+                    _vLoopCounter_59_34 = _eSystem._oSucc (_vLoopCounter_59_34);
                 }
             }
-            aircrafts = _vThose_57_27;
+            aircrafts = _vThose_59_27;
         }
-        _lClassInvariantCheck ("AirTrafficController.pd:57,14");
+        _lClassInvariantCheck ("AirTrafficController.pd:59,14");
     }
 
     public void fly ()
     {
         dropIfLeavesBoundaryAfterFlying ();
         {
-            _eSeq _vForYield_62_27 = new _eSeq ();
+            _eSeq _vForYield_64_27 = new _eSeq ();
             {
-                int _vCaptureCount_craft_62_39 = aircrafts._oHash ();
-                int _vLoopCounter_62_32 = 0;
+                int _vCaptureCount_craft_64_39 = aircrafts._oHash ();
+                int _vLoopCounter_64_32 = 0;
                 for (;;)
                 {
-                    if ((_vLoopCounter_62_32 == _vCaptureCount_craft_62_39)) break;
-                    _vForYield_62_27 = _vForYield_62_27.append (((_eAny) ((Aircraft) aircrafts.
-                        _oIndex (_vLoopCounter_62_32)).getCraftAfterFlying (AirTrafficController.
+                    if ((_vLoopCounter_64_32 == _vCaptureCount_craft_64_39)) break;
+                    _vForYield_64_27 = _vForYield_64_27.append (((_eAny) ((Aircraft) aircrafts.
+                        _oIndex (_vLoopCounter_64_32)).getCraftAfterFlying (AirTrafficController.
                         defaultTimeToFlyFor)));
-                    _vLoopCounter_62_32 = _eSystem._oSucc (_vLoopCounter_62_32);
+                    _vLoopCounter_64_32 = _eSystem._oSucc (_vLoopCounter_64_32);
                 }
             }
-            aircrafts = _vForYield_62_27;
+            aircrafts = _vForYield_64_27;
         }
-        _lClassInvariantCheck ("AirTrafficController.pd:61,19");
+        _lClassInvariantCheck ("AirTrafficController.pd:63,19");
+    }
+
+    public int getConflictStatus (Aircraft aircraft, _eMap incconflicts, AircraftPair
+        _t0incconflicts, ConflictStatus _t1incconflicts)
+    {
+        _eSet _vForYield_67_24 = new _eSet ();
+        {
+            _eSet _vCaptureBound_c_67_51 = incconflicts.pairs ();
+            int _vCaptureCount_c_67_51 = _vCaptureBound_c_67_51._oHash ();
+            int _vLoopCounter_67_35 = 0;
+            for (;;)
+            {
+                if ((_vLoopCounter_67_35 == _vCaptureCount_c_67_51)) break;
+                if ((aircraft._lEqual (((AircraftPair) ((_ePair) _vCaptureBound_c_67_51._oIndex (
+                    _vLoopCounter_67_35)).x).craft1) || aircraft._lEqual (((AircraftPair) ((_ePair)
+                    _vCaptureBound_c_67_51._oIndex (_vLoopCounter_67_35)).x).craft2)))
+                {
+                    _vForYield_67_24 = _vForYield_67_24.append (((_ePair) _vCaptureBound_c_67_51.
+                        _oIndex (_vLoopCounter_67_35)).y);
+                }
+                _vLoopCounter_67_35 = _eSystem._oSucc (_vLoopCounter_67_35);
+            }
+        }
+        _eSet _vLet_lst_67_17 = _vForYield_67_24;
+        return (_vLet_lst_67_17._ovIn (((_eAny) new ConflictStatus (ConflictStatus.Conflicted))) ?
+        ConflictStatus.Conflicted : _vLet_lst_67_17._ovIn (((_eAny) new ConflictStatus (
+            ConflictStatus.PotentialFutureConflict))) ?
+        ConflictStatus.PotentialFutureConflict : ConflictStatus.NoConflict);
     }
 
     public AirTrafficController (_eSeq _vaircrafts, Aircraft _t0_vaircrafts, double _vminX, double
@@ -312,69 +340,69 @@ public class AirTrafficController extends _eAny
             _eSystem.currentCheckNesting ++;
             try
             {
-                boolean _vCondResult_67_13;
+                boolean _vCondResult_75_13;
                 if (((_vminX < _vmaxX) && (_vminY < _vmaxY)))
                 {
-                    boolean _vQuantifierResult_67_15;
+                    boolean _vQuantifierResult_75_15;
                     {
-                        _vQuantifierResult_67_15 = true;
-                        int _vCaptureCount_a_67_26 = _vaircrafts._oHash ();
-                        int _vLoopCounter_67_23 = 0;
+                        _vQuantifierResult_75_15 = true;
+                        int _vCaptureCount_a_75_26 = _vaircrafts._oHash ();
+                        int _vLoopCounter_75_23 = 0;
                         for (;;)
                         {
-                            if (((_vLoopCounter_67_23 == _vCaptureCount_a_67_26) || (!
-                                _vQuantifierResult_67_15))) break;
-                            _vQuantifierResult_67_15 = (1 == _vaircrafts._ovHash (_vaircrafts.
-                                _oIndex (_vLoopCounter_67_23)));
-                            if ((!_vQuantifierResult_67_15))
+                            if (((_vLoopCounter_75_23 == _vCaptureCount_a_75_26) || (!
+                                _vQuantifierResult_75_15))) break;
+                            _vQuantifierResult_75_15 = (1 == _vaircrafts._ovHash (_vaircrafts.
+                                _oIndex (_vLoopCounter_75_23)));
+                            if ((!_vQuantifierResult_75_15))
                             {
                             }
                             else
                             {
-                                _vLoopCounter_67_23 = _eSystem._oSucc (_vLoopCounter_67_23);
+                                _vLoopCounter_75_23 = _eSystem._oSucc (_vLoopCounter_75_23);
                             }
                         }
                     }
-                    _vCondResult_67_13 = _vQuantifierResult_67_15;
+                    _vCondResult_75_13 = _vQuantifierResult_75_15;
                 }
                 else
                 {
-                    _vCondResult_67_13 = false;
+                    _vCondResult_75_13 = false;
                 }
-                boolean _vCondResult_68_13;
-                if (_vCondResult_67_13)
+                boolean _vCondResult_76_13;
+                if (_vCondResult_75_13)
                 {
-                    boolean _vQuantifierResult_68_15;
+                    boolean _vQuantifierResult_76_15;
                     {
-                        _vQuantifierResult_68_15 = true;
-                        int _vCaptureCount_a_68_26 = _vaircrafts._oHash ();
-                        int _vLoopCounter_68_23 = 0;
+                        _vQuantifierResult_76_15 = true;
+                        int _vCaptureCount_a_76_26 = _vaircrafts._oHash ();
+                        int _vLoopCounter_76_23 = 0;
                         for (;;)
                         {
-                            if (((_vLoopCounter_68_23 == _vCaptureCount_a_68_26) || (!
-                                _vQuantifierResult_68_15))) break;
-                            _vQuantifierResult_68_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
-                                (_vLoopCounter_68_23)).position.x) && (((Aircraft) _vaircrafts.
-                                _oIndex (_vLoopCounter_68_23)).position.x <= _vmaxX)) && ((_vminY <=
-                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_68_23)).position.y)
-                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_68_23)).position.
+                            if (((_vLoopCounter_76_23 == _vCaptureCount_a_76_26) || (!
+                                _vQuantifierResult_76_15))) break;
+                            _vQuantifierResult_76_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
+                                (_vLoopCounter_76_23)).position.x) && (((Aircraft) _vaircrafts.
+                                _oIndex (_vLoopCounter_76_23)).position.x <= _vmaxX)) && ((_vminY <=
+                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_76_23)).position.y)
+                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_76_23)).position.
                                 y <= _vmaxY)));
-                            if ((!_vQuantifierResult_68_15))
+                            if ((!_vQuantifierResult_76_15))
                             {
                             }
                             else
                             {
-                                _vLoopCounter_68_23 = _eSystem._oSucc (_vLoopCounter_68_23);
+                                _vLoopCounter_76_23 = _eSystem._oSucc (_vLoopCounter_76_23);
                             }
                         }
                     }
-                    _vCondResult_68_13 = _vQuantifierResult_68_15;
+                    _vCondResult_76_13 = _vQuantifierResult_76_15;
                 }
                 else
                 {
-                    _vCondResult_68_13 = false;
+                    _vCondResult_76_13 = false;
                 }
-                if (!(_vCondResult_68_13)) throw new _xPre ("AirTrafficController.pd:68,13");
+                if (!(_vCondResult_76_13)) throw new _xPre ("AirTrafficController.pd:76,13");
             }
             catch (_xCannotEvaluate _lException)
             {
@@ -386,7 +414,7 @@ public class AirTrafficController extends _eAny
         maxX = _vmaxX;
         minY = _vminY;
         maxY = _vmaxY;
-        _lc_AirTrafficController ("AirTrafficController.pd:64,5");
+        _lc_AirTrafficController ("AirTrafficController.pd:72,5");
     }
 
     public boolean _lEqual (AirTrafficController _vArg_10_11)
