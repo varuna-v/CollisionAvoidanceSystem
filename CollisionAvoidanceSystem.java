@@ -39,7 +39,7 @@ public class CollisionAvoidanceSystem extends JFrame {
 
 		while (true) {
 			try {
-				Thread.sleep(2000); // 1000 milliseconds is one second.
+				Thread.sleep(1000); // 1000 milliseconds is one second.
 			} catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
@@ -51,22 +51,13 @@ public class CollisionAvoidanceSystem extends JFrame {
 		// work();
 	}
 
-	private void work() {
-		// _eSeq crafts = system.getAircrafts();
-		// String text = "<html>" + crafts;
-		// for (Aircraft c : crafts)
-		// text += c.toString() + "<br>";
-		// text += "</html>";
-		// theText.setText(text);
-	}
-
 	private _eSeq getInitialSeqOfAircrafts() {
 		return new _eSeq()
 				._lAppend(
 						((_eAny) new Aircraft(
 								new Vector(10.0, 1000.0, 21353.0,
 										VectorType.Position, (VectorType) null),
-								new Vector(234.0, 93.0, 0.0,
+								new Vector(234.0, -93.0, 0.0,
 										VectorType.Velocity, (VectorType) null),
 								50.0, AircraftStatus.FlyingAtLevel,
 								(AircraftStatus) null, _eSystem._lString("A"),
@@ -80,9 +71,9 @@ public class CollisionAvoidanceSystem extends JFrame {
 								(AircraftStatus) null, _eSystem._lString("B"),
 								(char) 0)),
 						((_eAny) new Aircraft(
-								new Vector(879.0, 664.0, 7834.0,
+								new Vector(879.0, 664.0, 21053.0,
 										VectorType.Position, (VectorType) null),
-								new Vector(265.0, 86.0, 0.0,
+								new Vector(-265.0, 86.0, 0.0,
 										VectorType.Velocity, (VectorType) null),
 								30.0, AircraftStatus.FlyingAtLevel,
 								(AircraftStatus) null, _eSystem._lString("C"),
@@ -97,9 +88,9 @@ public class CollisionAvoidanceSystem extends JFrame {
 								(char) 0)))
 				._lAppend(
 						((_eAny) new Aircraft(
-								new Vector(7568.0, 6675.0, 34456.0,
+								new Vector(7568.0, 6675.0, 21353.0,
 										VectorType.Position, (VectorType) null),
-								new Vector(57.0, 75.0, 0.0,
+								new Vector(57.0, -75.0, 0.0,
 										VectorType.Velocity, (VectorType) null),
 								35.0, AircraftStatus.FlyingAtLevel,
 								(AircraftStatus) null, _eSystem._lString("E"),
@@ -115,7 +106,7 @@ public class CollisionAvoidanceSystem extends JFrame {
 						((_eAny) new Aircraft(
 								new Vector(987.0, 5342.0, 344.0,
 										VectorType.Position, (VectorType) null),
-								new Vector(364.0, 63.0, 0.0,
+								new Vector(-364.0, 63.0, 0.0,
 										VectorType.Velocity, (VectorType) null),
 								5.0, AircraftStatus.FlyingAtLevel,
 								(AircraftStatus) null, _eSystem._lString("G"),
@@ -130,30 +121,4 @@ public class CollisionAvoidanceSystem extends JFrame {
 		return aircrafts;
 	}
 
-	private ArrayList<Aircraft> getTestAircrafts() {
-		return new ArrayList<Aircraft>(
-				Arrays.asList(
-						new Aircraft(
-								new Vector(10.0, 1000.0, 21353.0,
-										VectorType.Position, (VectorType) null),
-								new Vector(234.0, 93.0, 0.0,
-										VectorType.Velocity, (VectorType) null),
-								50.0, AircraftStatus.FlyingAtLevel,
-								(AircraftStatus) null, _eSystem._lString("A"),
-								(char) 0),
-						(new Aircraft(
-								new Vector(67.0, 5.0, 3434.0,
-										VectorType.Position, (VectorType) null),
-								new Vector(54.0, 146.0, 0.0,
-										VectorType.Velocity, (VectorType) null),
-								20.0, AircraftStatus.FlyingAtLevel,
-								(AircraftStatus) null, _eSystem._lString("B"),
-								(char) 0)), (new Aircraft(new Vector(879.0,
-								664.0, 7834.0, VectorType.Position,
-								(VectorType) null), new Vector(265.0, 86.0,
-								0.0, VectorType.Velocity, (VectorType) null),
-								30.0, AircraftStatus.FlyingAtLevel,
-								(AircraftStatus) null, _eSystem._lString("C"),
-								(char) 0))));
-	}
 }

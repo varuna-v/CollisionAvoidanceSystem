@@ -23,7 +23,7 @@ interface
 	function type;
 	
 	function magnitude : real
-		^= ((x^2 + y^2 + z^2)^(1/2));
+		^= ((x^2 + y^2 + z^2)^(0.5));
 	
 	function getTwoDimensionalDistanceFrom(other : Vector) : real //!!
 		pre type = VectorType Position & other.type = VectorType Position

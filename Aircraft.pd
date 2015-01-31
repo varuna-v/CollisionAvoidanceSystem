@@ -8,7 +8,7 @@ class Aircraft ^=
 abstract
 
 	//Time added to hypothetical time to get maximum time before potential conflict is declared
-	const safteyTime ^= 300.00; //seconds
+	const safteyTime ^= 5.00; //seconds
 	const verticalBreakPoint ^= 8800.00; //meters
 	
 	var position : Vector;
@@ -32,6 +32,8 @@ interface
 	
 	function boundaryRadius;
 	
+	function identification;
+	
 	function speed : real
 		^= velocity.magnitude;
 		
@@ -45,30 +47,30 @@ interface
 	function breaksMinimumVerticalSeparation(other : Aircraft) : bool
 		^= (let heightDifference ^= ([other.position.y > position.y] : other.position.y - position.y,
 									[] : position.y - other.position.y);
-			([position.y <= verticalBreakPoint & other.position.y <= verticalBreakPoint] : heightDifference > 300.00, //meters
-			[] : heightDifference > 600.00)); //meters
+			([position.y <= verticalBreakPoint & other.position.y <= verticalBreakPoint] : heightDifference < 300.00, //meters
+			[] : heightDifference < 600.00)); //meters
 	
 	function isInConflictWith(other : Aircraft) : bool
 		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
 								  [] : other.boundaryRadius);
 			position.getTwoDimensionalDistanceFrom(other.position) <= biggerRadius);
-
-	function potentialFutureConflict(other : Aircraft) : bool
-		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= (timeToCollision(other) <= (timeToHypotheticalCollisionWith(other) + safteyTime));
 		
 	function timeToCollision(other : Aircraft) : real
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
 		^= (let velocityDifference ^= other.velocity - velocity;
 			((position - other.position).dotProduct(velocityDifference)/(velocityDifference.magnitude)^2));
 		//!!assert result >= 0.00;
+
+	function potentialFutureConflict(other : Aircraft) : bool
+		pre ~isInConflictWith(other) & other.velocity ~= velocity
+		^= (timeToCollision(other) <= (timeToHypotheticalCollisionWith(other) + safteyTime));
 		
-	//Minimum time to collision if the aircraft as not in conflict
+	//Minimum time to collision if the only info is that the aircrafts are not in conflict
 	function timeToHypotheticalCollisionWith(other : Aircraft) : real
 		pre ~isInConflictWith(other)
 		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
 								  [] : other.boundaryRadius);
-			biggerRadius/(speed+other.speed));
+			biggerRadius/(velocity-other.velocity).magnitude);
 	
 	function positionAfterFlying(time : real) : Vector
 		^= position.plus((velocity * time), VectorType Position);

@@ -7,7 +7,7 @@
 class AirTrafficController ^=
 abstract
 	
-	const defaultTimeToFlyFor ^= 1.00; //seconds
+	const defaultTimeToFlyFor ^= 0.10; //seconds
 	
 	var aircrafts : seq of Aircraft;
 	var minX : real; //m
@@ -54,6 +54,12 @@ interface
 		^= (let endPosition ^= aircraft.positionAfterFlying(defaultTimeToFlyFor);
 			((minX <= endPosition.x <= maxX) & (minY <= endPosition.y <= maxY)));
 	
+    function getConflictStatus(aircraft : Aircraft, incconflicts : map of (AircraftPair -> ConflictStatus)) : ConflictStatus
+		^= (let lst ^= (for those c::incconflicts.pairs :- c.x.craft1 = aircraft | c.x.craft2 = aircraft yield c.y);
+			([ConflictStatus Conflicted in lst] : ConflictStatus Conflicted,
+			 [ConflictStatus PotentialFutureConflict in lst] : ConflictStatus PotentialFutureConflict,
+			 [] : ConflictStatus NoConflict));
+			 
 	schema !dropIfLeavesBoundaryAfterFlying
 		//pre ~willAllAircraftsBeInBoundaryAfterFlying
 		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a))
@@ -61,13 +67,10 @@ interface
 	
 	schema !fly
 		post self!dropIfLeavesBoundaryAfterFlying then
-			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(defaultTimeToFlyFor));
+			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(defaultTimeToFlyFor)) then
+			 (let locConflicts ^= conflicts;
+			  aircrafts != (for craft::aircrafts yield craft.getCraftWithConflictStatus(getConflictStatus(craft, locConflicts))));
 													
-    function getConflictStatus(aircraft : Aircraft, incconflicts : map of (AircraftPair -> ConflictStatus)) : ConflictStatus
-		^= (let lst ^= (for those c::incconflicts.pairs :- c.x.craft1 = aircraft | c.x.craft2 = aircraft yield c.y);
-			([ConflictStatus Conflicted in lst] : ConflictStatus Conflicted,
-			 [ConflictStatus PotentialFutureConflict in lst] : ConflictStatus PotentialFutureConflict,
-			 [] : ConflictStatus NoConflict));
 	
 	build{!aircrafts : seq of Aircraft, !minX : real, ! maxX : real, !minY : real, !maxY : real}
 		pre minX < maxX & minY < maxY 
