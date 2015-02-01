@@ -69,8 +69,7 @@ interface
 		post self!dropIfLeavesBoundaryAfterFlying then
 			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(defaultTimeToFlyFor)) then
 			 (let locConflicts ^= conflicts;
-			  aircrafts != (for craft::aircrafts yield craft.getCraftWithConflictStatus(getConflictStatus(craft, locConflicts))));
-													
+			  aircrafts != (for craft::aircrafts yield craft.getCraftWithConflictStatus(getConflictStatus(craft, locConflicts))));							
 	
 	build{!aircrafts : seq of Aircraft, !minX : real, ! maxX : real, !minY : real, !maxY : real}
 		pre minX < maxX & minY < maxY 

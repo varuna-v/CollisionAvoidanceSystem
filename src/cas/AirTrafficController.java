@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/AirTrafficController.pd'
-//* by Perfect Developer version 6.10.01 at 17:46:28 UTC on Saturday January 31st 2015
+//* by Perfect Developer version 6.10.01 at 17:42:02 UTC on Sunday February 1st 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfB088.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfFF35.tmp
 //***********************************************************************************************
 
 package cas;
@@ -359,8 +359,37 @@ public class AirTrafficController extends _eAny
             _eSystem.currentCheckNesting ++;
             try
             {
-                boolean _vCondResult_78_13;
+                boolean _vCondResult_77_13;
                 if (((_vminX < _vmaxX) && (_vminY < _vmaxY)))
+                {
+                    boolean _vQuantifierResult_77_15;
+                    {
+                        _vQuantifierResult_77_15 = true;
+                        int _vCaptureCount_a_77_26 = _vaircrafts._oHash ();
+                        int _vLoopCounter_77_23 = 0;
+                        for (;;)
+                        {
+                            if (((_vLoopCounter_77_23 == _vCaptureCount_a_77_26) || (!
+                                _vQuantifierResult_77_15))) break;
+                            _vQuantifierResult_77_15 = (1 == _vaircrafts._ovHash (_vaircrafts.
+                                _oIndex (_vLoopCounter_77_23)));
+                            if ((!_vQuantifierResult_77_15))
+                            {
+                            }
+                            else
+                            {
+                                _vLoopCounter_77_23 = _eSystem._oSucc (_vLoopCounter_77_23);
+                            }
+                        }
+                    }
+                    _vCondResult_77_13 = _vQuantifierResult_77_15;
+                }
+                else
+                {
+                    _vCondResult_77_13 = false;
+                }
+                boolean _vCondResult_78_13;
+                if (_vCondResult_77_13)
                 {
                     boolean _vQuantifierResult_78_15;
                     {
@@ -371,8 +400,12 @@ public class AirTrafficController extends _eAny
                         {
                             if (((_vLoopCounter_78_23 == _vCaptureCount_a_78_26) || (!
                                 _vQuantifierResult_78_15))) break;
-                            _vQuantifierResult_78_15 = (1 == _vaircrafts._ovHash (_vaircrafts.
-                                _oIndex (_vLoopCounter_78_23)));
+                            _vQuantifierResult_78_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
+                                (_vLoopCounter_78_23)).position.x) && (((Aircraft) _vaircrafts.
+                                _oIndex (_vLoopCounter_78_23)).position.x <= _vmaxX)) && ((_vminY <=
+                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_78_23)).position.y)
+                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_78_23)).position.
+                                y <= _vmaxY)));
                             if ((!_vQuantifierResult_78_15))
                             {
                             }
@@ -388,40 +421,7 @@ public class AirTrafficController extends _eAny
                 {
                     _vCondResult_78_13 = false;
                 }
-                boolean _vCondResult_79_13;
-                if (_vCondResult_78_13)
-                {
-                    boolean _vQuantifierResult_79_15;
-                    {
-                        _vQuantifierResult_79_15 = true;
-                        int _vCaptureCount_a_79_26 = _vaircrafts._oHash ();
-                        int _vLoopCounter_79_23 = 0;
-                        for (;;)
-                        {
-                            if (((_vLoopCounter_79_23 == _vCaptureCount_a_79_26) || (!
-                                _vQuantifierResult_79_15))) break;
-                            _vQuantifierResult_79_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
-                                (_vLoopCounter_79_23)).position.x) && (((Aircraft) _vaircrafts.
-                                _oIndex (_vLoopCounter_79_23)).position.x <= _vmaxX)) && ((_vminY <=
-                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_79_23)).position.y)
-                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_79_23)).position.
-                                y <= _vmaxY)));
-                            if ((!_vQuantifierResult_79_15))
-                            {
-                            }
-                            else
-                            {
-                                _vLoopCounter_79_23 = _eSystem._oSucc (_vLoopCounter_79_23);
-                            }
-                        }
-                    }
-                    _vCondResult_79_13 = _vQuantifierResult_79_15;
-                }
-                else
-                {
-                    _vCondResult_79_13 = false;
-                }
-                if (!(_vCondResult_79_13)) throw new _xPre ("AirTrafficController.pd:79,13");
+                if (!(_vCondResult_78_13)) throw new _xPre ("AirTrafficController.pd:78,13");
             }
             catch (_xCannotEvaluate _lException)
             {
@@ -433,7 +433,7 @@ public class AirTrafficController extends _eAny
         maxX = _vmaxX;
         minY = _vminY;
         maxY = _vmaxY;
-        _lc_AirTrafficController ("AirTrafficController.pd:75,5");
+        _lc_AirTrafficController ("AirTrafficController.pd:74,5");
     }
 
     public boolean _lEqual (AirTrafficController _vArg_10_11)

@@ -19,6 +19,7 @@ import Ertsys.*;
 public class ATCDisplay extends JPanel {
 
 	private List<Aircraft> _aircrafts;
+	public static List<JLabel> labels;
 	private static final double scale = 1.4;
 	
 	public ATCDisplay(List<Aircraft> aircrafts)
@@ -39,13 +40,20 @@ public class ATCDisplay extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		
+		labels = new ArrayList<JLabel>();
+		
 		for (Aircraft aircraft : _aircrafts)
 		{
+			String id = aircraft.identification.toString();
+			String sId = id.substring(4, id.length()-1);
+			
 			//Set conflict colour
 			if (aircraft.conflictStatus == ConflictStatus.Conflicted)  
 			    g2d.setColor(Color.red);
 			else if(aircraft.conflictStatus == ConflictStatus.PotentialFutureConflict)
-			    g2d.setColor(Color.yellow);
+			{   g2d.setColor(Color.yellow);
+				//System.out.println(sId);//!!
+			}
 			else 
 			    g2d.setColor(Color.green);
 			
@@ -56,11 +64,14 @@ public class ATCDisplay extends JPanel {
 			g2d.setStroke(new BasicStroke(1.5f));
 			g2d.drawLine(x, y, x, y);
 			//Display aircraft identity
-			String id = aircraft.identification.toString();
-			JLabel idLabel = new JLabel(id.substring(4, id.length()-1));
+			
+			
+			JLabel idLabel = new JLabel(sId);
 			idLabel.setForeground(Color.ORANGE);
-			this.add(idLabel);
+			labels.add(idLabel);
+			//this.add(idLabel);
 			idLabel.setLocation(x, y-1);
+			
 			//idLabel.setSize(5, 5);
 			//Draw boundary
 			g2d.setStroke(new BasicStroke(1f));

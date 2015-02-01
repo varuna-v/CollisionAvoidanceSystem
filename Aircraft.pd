@@ -8,8 +8,9 @@ class Aircraft ^=
 abstract
 
 	//Time added to hypothetical time to get maximum time before potential conflict is declared
-	const safteyTime ^= 5.00; //seconds
+	const safteyTime ^= 0.50; //seconds
 	const verticalBreakPoint ^= 8800.00; //meters
+	const flytimeForHypotheticalCollisionAnalysis ^= 0.01; //seconds
 	
 	var position : Vector;
 	var velocity : Vector; // km or m per sec
@@ -63,14 +64,18 @@ interface
 
 	function potentialFutureConflict(other : Aircraft) : bool
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= (timeToCollision(other) <= (timeToHypotheticalCollisionWith(other) + safteyTime));
+		^= ((timeToCollision(other) + safteyTime) <= timeToHypotheticalCollisionWith(other));
 		
 	//Minimum time to collision if the only info is that the aircrafts are not in conflict
 	function timeToHypotheticalCollisionWith(other : Aircraft) : real
 		pre ~isInConflictWith(other)
-		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
-								  [] : other.boundaryRadius);
-			biggerRadius/(velocity-other.velocity).magnitude);
+		^= ([isFlyingTowards(other)] :(let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
+															[] : other.boundaryRadius);
+									   biggerRadius/(velocity-other.velocity).magnitude),
+			[] : 0.00);
+	
+	function isFlyingTowards(other : Aircraft) : bool
+		^= positionAfterFlying(flytimeForHypotheticalCollisionAnalysis).getTwoDimensionalDistanceFrom(other.positionAfterFlying(flytimeForHypotheticalCollisionAnalysis)) >= position.getTwoDimensionalDistanceFrom(other.position);
 	
 	function positionAfterFlying(time : real) : Vector
 		^= position.plus((velocity * time), VectorType Position);
