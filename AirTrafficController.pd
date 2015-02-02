@@ -10,15 +10,14 @@ abstract
 	const defaultTimeToFlyFor ^= 0.10; //seconds
 	
 	var aircrafts : seq of Aircraft;
-	var minX : real; //m
-	var maxX : real; //m
-	var minY : real; //m
-	var maxY : real; //m
+	var minX : real; //meter / km
+	var maxX : real; //meter / km
+	var minY : real; //meter / km
+	var maxY : real; //meter / km
 	//var conflicts : map of (AircraftPair -> ConflictStatus);
 	
-	invariant forall a::aircrafts :- a#aircrafts = 1;
 	invariant forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY;
-	//invariant forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]);
+	invariant forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]);
 	
 interface
 	
@@ -63,18 +62,20 @@ interface
 	schema !dropIfLeavesBoundaryAfterFlying
 		//pre ~willAllAircraftsBeInBoundaryAfterFlying
 		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a))
-		assert forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY;
+		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
+			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));
 	
 	schema !fly
 		post self!dropIfLeavesBoundaryAfterFlying then
 			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(defaultTimeToFlyFor)) then
 			 (let locConflicts ^= conflicts;
-			  aircrafts != (for craft::aircrafts yield craft.getCraftWithConflictStatus(getConflictStatus(craft, locConflicts))));							
+			  aircrafts != (for craft::aircrafts yield craft.getCraftWithConflictStatus(getConflictStatus(craft, locConflicts))))
+		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
+			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));							
 	
 	build{!aircrafts : seq of Aircraft, !minX : real, ! maxX : real, !minY : real, !maxY : real}
 		pre minX < maxX & minY < maxY 
-			//& (forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]))
-			& (forall a::aircrafts :- a#aircrafts = 1)
+			& (forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]))
 			& (forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY);
 	
 end;

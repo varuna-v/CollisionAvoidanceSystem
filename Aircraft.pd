@@ -8,7 +8,7 @@ class Aircraft ^=
 abstract
 
 	//Time added to hypothetical time to get maximum time before potential conflict is declared
-	const safteyTime ^= 0.50; //seconds
+	const safteyTime ^= 0.1; //seconds
 	const verticalBreakPoint ^= 8800.00; //meters
 	const flytimeForHypotheticalCollisionAnalysis ^= 0.01; //seconds
 	
@@ -47,35 +47,35 @@ interface
 	
 	function breaksMinimumVerticalSeparation(other : Aircraft) : bool
 		^= (let heightDifference ^= ([other.position.y > position.y] : other.position.y - position.y,
-									[] : position.y - other.position.y);
+									 [] : position.y - other.position.y);
 			([position.y <= verticalBreakPoint & other.position.y <= verticalBreakPoint] : heightDifference < 300.00, //meters
 			[] : heightDifference < 600.00)); //meters
 	
 	function isInConflictWith(other : Aircraft) : bool
 		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
-								  [] : other.boundaryRadius);
+								 [] : other.boundaryRadius);
 			position.getTwoDimensionalDistanceFrom(other.position) <= biggerRadius);
 		
 	function timeToCollision(other : Aircraft) : real
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
 		^= (let velocityDifference ^= other.velocity - velocity;
-			((position - other.position).dotProduct(velocityDifference)/(velocityDifference.magnitude)^2));
+			((position - other.position).dotProduct(velocityDifference)/((velocityDifference.magnitude)^2)));
 		//!!assert result >= 0.00;
 
 	function potentialFutureConflict(other : Aircraft) : bool
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= ((timeToCollision(other) + safteyTime) <= timeToHypotheticalCollisionWith(other));
+		^= (timeToCollision(other) <= (timeToHypotheticalCollisionWith(other) + safteyTime) );
 		
 	//Minimum time to collision if the only info is that the aircrafts are not in conflict
 	function timeToHypotheticalCollisionWith(other : Aircraft) : real
-		pre ~isInConflictWith(other)
+		pre ~isInConflictWith(other) & other.velocity ~= velocity
 		^= ([isFlyingTowards(other)] :(let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
 															[] : other.boundaryRadius);
 									   biggerRadius/(velocity-other.velocity).magnitude),
-			[] : 0.00);
+			[] : 1000000.00);
 	
 	function isFlyingTowards(other : Aircraft) : bool
-		^= positionAfterFlying(flytimeForHypotheticalCollisionAnalysis).getTwoDimensionalDistanceFrom(other.positionAfterFlying(flytimeForHypotheticalCollisionAnalysis)) >= position.getTwoDimensionalDistanceFrom(other.position);
+		^= positionAfterFlying(flytimeForHypotheticalCollisionAnalysis).getTwoDimensionalDistanceFrom(other.positionAfterFlying(flytimeForHypotheticalCollisionAnalysis)) < position.getTwoDimensionalDistanceFrom(other.position);
 	
 	function positionAfterFlying(time : real) : Vector
 		^= position.plus((velocity * time), VectorType Position);
