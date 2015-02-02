@@ -8,7 +8,7 @@ class Aircraft ^=
 abstract
 
 	//Time added to hypothetical time to get maximum time before potential conflict is declared
-	const safteyTime ^= 0.1; //seconds
+	const safteyTime ^= 0.3; //seconds
 	const verticalBreakPoint ^= 8800.00; //meters
 	const flytimeForHypotheticalCollisionAnalysis ^= 0.01; //seconds
 	
@@ -64,15 +64,15 @@ interface
 
 	function potentialFutureConflict(other : Aircraft) : bool
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= (timeToCollision(other) <= (timeToHypotheticalCollisionWith(other) + safteyTime) );
+		^= ([~isFlyingTowards(other)] : false,
+			[] : timeToCollision(other) <= (timeToHypotheticalCollisionWith(other) + safteyTime) );
 		
 	//Minimum time to collision if the only info is that the aircrafts are not in conflict
 	function timeToHypotheticalCollisionWith(other : Aircraft) : real
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= ([isFlyingTowards(other)] :(let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
+		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
 															[] : other.boundaryRadius);
-									   biggerRadius/(velocity-other.velocity).magnitude),
-			[] : 1000000.00);
+									   biggerRadius/(velocity-other.velocity).magnitude);
 	
 	function isFlyingTowards(other : Aircraft) : bool
 		^= positionAfterFlying(flytimeForHypotheticalCollisionAnalysis).getTwoDimensionalDistanceFrom(other.positionAfterFlying(flytimeForHypotheticalCollisionAnalysis)) < position.getTwoDimensionalDistanceFrom(other.position);

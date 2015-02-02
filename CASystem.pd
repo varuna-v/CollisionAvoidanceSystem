@@ -6,8 +6,9 @@
 
 class CASystem ^=
 abstract
+	const defaultTimeToFlyFor ^= 0.10; //seconds
 	
-	var atc : AirTrafficController;
+	var atc : AirTrafficController;	
 	
 interface
 	
@@ -17,7 +18,7 @@ interface
 		^= atc.aircrafts;
 	
 	schema !fly
-		post atc!fly;
+		post atc!fly(defaultTimeToFlyFor);
 	
 	build{!atc : AirTrafficController};
 	

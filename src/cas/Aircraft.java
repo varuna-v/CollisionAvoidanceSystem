@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Aircraft.pd'
-//* by Perfect Developer version 6.10.01 at 12:22:03 UTC on Monday February 2nd 2015
+//* by Perfect Developer version 6.10.01 at 12:40:02 UTC on Monday February 2nd 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfD3C3.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etf4A33.tmp
 //***********************************************************************************************
 
 package cas;
@@ -68,7 +68,7 @@ public class Aircraft extends _eAny
         _lc_Aircraft (_lArg);
     }
 
-    protected final static double safteyTime = 0.1;
+    protected final static double safteyTime = 0.3;
     protected final static double verticalBreakPoint = 8800.0;
     protected final static double flytimeForHypotheticalCollisionAnalysis = 0.01;
     public Vector position;
@@ -143,8 +143,9 @@ public class Aircraft extends _eAny
             }
             _eSystem.currentCheckNesting --;
         }
-        return (timeToCollision (other) <= (Aircraft.safteyTime + timeToHypotheticalCollisionWith (
-            other)));
+        return ((!isFlyingTowards (other)) ?
+        false : (timeToCollision (other) <= (Aircraft.safteyTime + timeToHypotheticalCollisionWith (
+            other))));
     }
 
     public double timeToHypotheticalCollisionWith (Aircraft other)
@@ -155,24 +156,17 @@ public class Aircraft extends _eAny
             try
             {
                 if (!(((!isInConflictWith (other)) && (!velocity._lEqual (other.velocity))))) throw
-                    new _xPre ("Aircraft.pd:71,13");
+                    new _xPre ("Aircraft.pd:72,13");
             }
             catch (_xCannotEvaluate _lException)
             {
             }
             _eSystem.currentCheckNesting --;
         }
-        if (isFlyingTowards (other))
-        {
-            double _vLet_biggerRadius_72_44 = ((other.boundaryRadius < boundaryRadius) ?
-            boundaryRadius : other.boundaryRadius);
-            return _eSystem._oDiv (_vLet_biggerRadius_72_44, velocity._oMinus (other.velocity).
-                magnitude ());
-        }
-        else
-        {
-            return 1e+006;
-        }
+        double _vLet_biggerRadius_73_17 = ((other.boundaryRadius < boundaryRadius) ?
+        boundaryRadius : other.boundaryRadius);
+        return _eSystem._oDiv (_vLet_biggerRadius_73_17, velocity._oMinus (other.velocity).magnitude
+            ());
     }
 
     public boolean isFlyingTowards (Aircraft other)

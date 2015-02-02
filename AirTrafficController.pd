@@ -7,8 +7,6 @@
 class AirTrafficController ^=
 abstract
 	
-	const defaultTimeToFlyFor ^= 0.10; //seconds
-	
 	var aircrafts : seq of Aircraft;
 	var minX : real; //meter / km
 	var maxX : real; //meter / km
@@ -46,11 +44,11 @@ interface
 			[] : (let c ^= any k::cons :- k=k;
 				  "Pair <br>" ++ c.x.toString ++ "<br> Status: " ++ c.y.toString ++ "<br>" ++ getConflictsString(cons.remove(c))));
 	
-	function willAllAircraftsBeInBoundaryAfterFlying : bool
-		^= forall a::aircrafts :- willAircraftBeInBoundryAfterFlying(a);
+	function willAllAircraftsBeInBoundaryAfterFlying(flyForTime : real) : bool
+		^= forall a::aircrafts :- willAircraftBeInBoundryAfterFlying(a, flyForTime);
 	
-	function willAircraftBeInBoundryAfterFlying(aircraft : Aircraft) : bool
-		^= (let endPosition ^= aircraft.positionAfterFlying(defaultTimeToFlyFor);
+	function willAircraftBeInBoundryAfterFlying(aircraft : Aircraft, flyForTime : real) : bool
+		^= (let endPosition ^= aircraft.positionAfterFlying(flyForTime);
 			((minX <= endPosition.x <= maxX) & (minY <= endPosition.y <= maxY)));
 	
     function getConflictStatus(aircraft : Aircraft, incconflicts : map of (AircraftPair -> ConflictStatus)) : ConflictStatus
@@ -59,15 +57,15 @@ interface
 			 [ConflictStatus PotentialFutureConflict in lst] : ConflictStatus PotentialFutureConflict,
 			 [] : ConflictStatus NoConflict));
 			 
-	schema !dropIfLeavesBoundaryAfterFlying
+	schema !dropIfLeavesBoundaryAfterFlying(flyForTime : real)
 		//pre ~willAllAircraftsBeInBoundaryAfterFlying
-		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a))
+		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a, flyForTime))
 		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
 			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));
 	
-	schema !fly
-		post self!dropIfLeavesBoundaryAfterFlying then
-			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(defaultTimeToFlyFor)) then
+	schema !fly(forTime : real)
+		post self!dropIfLeavesBoundaryAfterFlying(forTime) then
+			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(forTime)) then
 			 (let locConflicts ^= conflicts;
 			  aircrafts != (for craft::aircrafts yield craft.getCraftWithConflictStatus(getConflictStatus(craft, locConflicts))))
 		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
@@ -76,6 +74,7 @@ interface
 	build{!aircrafts : seq of Aircraft, !minX : real, ! maxX : real, !minY : real, !maxY : real}
 		pre minX < maxX & minY < maxY 
 			& (forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]))
-			& (forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY);
+			& (forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY)
+		post !fly(0.0);
 	
 end;
