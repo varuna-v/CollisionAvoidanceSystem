@@ -16,22 +16,25 @@ import java.awt.BasicStroke;
 
 import Ertsys.*;
 
-public class ATCDisplay extends JPanel {
+public class CraftsMovementDisplay extends JPanel {
 
 	private List<Aircraft> _aircrafts;
-	public static List<JLabel> labels;
+	private List<JLabel> _displayedLabels;
 	private static final double scale = 1.4;
 	
-	public ATCDisplay(List<Aircraft> aircrafts)
+	public CraftsMovementDisplay(List<Aircraft> aircrafts)
 	{
 		_aircrafts = aircrafts;
 	    setLayout(null);
+	    _displayedLabels = new ArrayList<JLabel>();
 	}
 	
 	public void updateAircrafts(List<Aircraft> aircrafts)
 	{
 		_aircrafts = aircrafts;
+		removeLabels();
 		this.repaint();
+		addLabels();
 	}
 	
 	public void paintComponent(Graphics g)
@@ -39,8 +42,6 @@ public class ATCDisplay extends JPanel {
 		setBackground(Color.black);
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		
-		labels = new ArrayList<JLabel>();
 		
 		for (Aircraft aircraft : _aircrafts)
 		{
@@ -63,16 +64,15 @@ public class ATCDisplay extends JPanel {
 			//Draw aircraft
 			g2d.setStroke(new BasicStroke(1.5f));
 			g2d.drawLine(x, y, x, y);
+			
 			//Display aircraft identity
-			
-			
 			JLabel idLabel = new JLabel(sId);
 			idLabel.setForeground(Color.ORANGE);
-			labels.add(idLabel);
-			//this.add(idLabel);
 			idLabel.setLocation(x, y-1);
+			idLabel.setSize(5, 5);
+			_displayedLabels.add(idLabel);
 			
-			//idLabel.setSize(5, 5);
+			
 			//Draw boundary
 			g2d.setStroke(new BasicStroke(1f));
 			int cx = (int)(x - (aircraft.boundaryRadius/2.0));
@@ -82,4 +82,27 @@ public class ATCDisplay extends JPanel {
 		}
 	}
 	
+	private void addLabels()
+	{
+		if (_displayedLabels != null)
+		{
+			for (int i = 0; i < _displayedLabels.size(); i++)
+			{
+				this.add(_displayedLabels.get(i));
+			}
+		}
+	}
+	
+	private void removeLabels()
+	{
+		if (_displayedLabels != null)
+		{
+			for (int i = 0; i < _displayedLabels.size(); i++)
+			{
+				JLabel label = _displayedLabels.get(i);
+				this.remove(label);
+				_displayedLabels.remove(label);
+			}
+		}
+	}
 }

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import java.util.*;
 import java.awt.Rectangle;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
 
 import Ertsys.*;
 
@@ -27,47 +29,59 @@ public class CollisionAvoidanceSystem extends JFrame {
 	public CollisionAvoidanceSystem() {
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-		AirTrafficController initialATC = new AirTrafficController(
-				getInitialSeqOfAircrafts(screenSize.width, screenSize.height),
-				(Aircraft) null, 0.0, (double) (screenSize.width + 50), 0.0,
-				(double) (screenSize.height + 50));
-		system = new CASystem(initialATC);
-
-		setTitle("Collision Avoidance System");
+		InitialiseCASystem(screenSize);
+		SetFrameProperties(screenSize);
+		
 		contentpane = getContentPane();
+		contentpane.setLayout(new GridBagLayout());
+		
+		ArrayList<Aircraft> aircrafts =  retrieveAircrafts();
+		
+		GridBagConstraints c1 = new GridBagConstraints();	
+		c1.fill = GridBagConstraints.BOTH;
+		c1.gridx = 0;
+		c1.gridy = 0;
+		CraftsMovementDisplay movementDisplay = new CraftsMovementDisplay(aircrafts);
+		movementDisplay.setPreferredSize(new Dimension(screenSize.width - 17, screenSize.height - 250));
+		contentpane.add(movementDisplay, c1);
 
-		setBounds(0, 0, screenSize.width, screenSize.height);
-		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-		ATCDisplay atcDisplay = new ATCDisplay(retrieveAircrafts());
-		if (atcDisplay.labels != null)
-		{
-			for (JLabel label : atcDisplay.labels)
-				atcDisplay.add(label);
-		}
-		contentpane.add(atcDisplay);
-
+		GridBagConstraints c2 = new GridBagConstraints();	
+		c2.fill = GridBagConstraints.BOTH;
+		c2.gridx = 0;
+		c2.gridy = GridBagConstraints.RELATIVE;
+		ConflictsDetailsDisplay cdsDisplay = new ConflictsDetailsDisplay(system);
+		cdsDisplay.setPreferredSize(new Dimension((screenSize.width - 17)/2, 210));
+		contentpane.add(cdsDisplay, c2);
+		
 		while (true) {
 			try {
 				Thread.sleep(1000); // 1000 milliseconds is one second.
 			} catch (InterruptedException ex) {
 				Thread.currentThread().interrupt();
 			}
-			if (atcDisplay.labels != null)
-			{
-				for (JLabel label : atcDisplay.labels)
-					atcDisplay.add(label);
-			}
 			system.fly();
-			atcDisplay.updateAircrafts(retrieveAircrafts());
-		}
-
-		// panel.repaint();
-		// work();
+			movementDisplay.updateAircrafts(retrieveAircrafts());
+			cdsDisplay.updateSystem(system);
+		}		
 	}
 
+	private void InitialiseCASystem(Dimension screenSize)
+	{
+		AirTrafficController initialATC = new AirTrafficController(
+				getInitialSeqOfAircrafts(screenSize.width, screenSize.height),
+				(Aircraft) null, 0.0, (double) (screenSize.width), 0.0,
+				(double) (screenSize.height));
+		system = new CASystem(initialATC);
+	}
+
+	private void SetFrameProperties(Dimension screenSize)
+	{
+		setTitle("Collision Avoidance System");		
+		setBounds(0, 0, screenSize.width, screenSize.height);
+		setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+	
 	private double getRandom(int rangeMax) {
 		return getRandom(0, rangeMax);
 	}
@@ -134,7 +148,8 @@ public class CollisionAvoidanceSystem extends JFrame {
 		for (int i = 0; i < system.getAircrafts()._oHash(); i++) {
 			aircrafts.add((Aircraft) system.getAircrafts()._oIndex(i));
 		}
+		
 		return aircrafts;
-	}
+	}	
 
 }

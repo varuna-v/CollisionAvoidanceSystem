@@ -22,11 +22,27 @@ interface
 		^= craft1.getConflictStatus(craft2);
 		//!!assert result = craft2.getConflictStatus(craft1);		
 	
+	function timeToConflict : real
+		^= craft1.timeToConflict(craft2);
+	
+	function breaksMinimumVerticalSeparation : bool
+		^= craft1.breaksMinimumVerticalSeparation(craft2);
+	
 	//!!redefine operator =(other : AircraftPair) : bool
 	//^= ((craft1 = other.craft1 & craft2 = other.craft2) | (craft1 = other.craft2 & craft2 = other.craft1));
 
 	redefine function toString : string
 		^=	"Craft 1 <br>" ++ craft1.toString ++ "<br> Craft 2 <br>" ++ craft2.toString; 
+	
+	operator ~~ (other)
+		^= ([getConflictStatus = ConflictStatus Conflicted & other.getConflictStatus = ConflictStatus Conflicted] : rank same,
+			[getConflictStatus = ConflictStatus Conflicted] : rank above,
+			[other.getConflictStatus = ConflictStatus Conflicted ] : rank below,
+			[~breaksMinimumVerticalSeparation & ~other.breaksMinimumVerticalSeparation] : rank same,
+			[~breaksMinimumVerticalSeparation] : rank below,
+			[other.breaksMinimumVerticalSeparation] : rank above,
+			[] : timeToConflict ~~ other.timeToConflict);
+			
 	
 	build{!craft1 : Aircraft, !craft2 : Aircraft}
 		pre craft1 ~= craft2;

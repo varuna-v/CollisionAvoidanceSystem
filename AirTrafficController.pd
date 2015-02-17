@@ -16,6 +16,9 @@ abstract
 	
 	invariant forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY;
 	invariant forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]);
+	//Forall subsets s of aircrafts, all elements of s satisfy
+	//invariant forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY
+	//				==>	(let s<<=aircrafts.ran; (forall a::s :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY));
 	
 interface
 	
@@ -27,13 +30,23 @@ interface
 	function getPairs : set of AircraftPair
 		^= (let s ^= (for i::0..<#aircrafts yield (for j::(i+1)..<#aircrafts yield AircraftPair{aircrafts[i], aircrafts[j]}).ran).ran;
 			flatten(s));
-		//!assert #result = ((#aircrafts)*(#aircrafts-1)/2); 
+		//assert #result = ((#aircrafts)*(#aircrafts-1)/2); 
 		
 	function conflicts : map of (AircraftPair -> ConflictStatus)
 		^= (let pairs ^= getPairs;
 			map of (AircraftPair -> ConflictStatus){(for p::pairs yield pair of (AircraftPair, ConflictStatus){p, p.getConflictStatus})})
 		assert forall a::result.pairs :- a.x.craft1 in aircrafts & a.x.craft2 in aircrafts & a.y = a.x.getConflictStatus;
 		//!!assert #result = ((#aircrafts)*(#aircrafts-1)/2);
+
+	function getMinimumTimeToConflict : string
+		^= (let pairs ^= getPairs;
+			([#pairs > 0 &(exists p::pairs :- p.getConflictStatus = ConflictStatus Conflicted)] : "0",
+			[] : (let timesToConsider ^= (for those p::pairs :- p.breaksMinimumVerticalSeparation yield p.timeToConflict);
+				  ([#timesToConsider > 0 & timesToConsider.min ~= 100000.00] : timesToConsider.min.toString,
+				   [] : "infinite"))));
+
+	function getAircraftPairsOrderedByTimeToConflict : seq of AircraftPair
+		^= getPairs.opermndec;
 
 	function printConflicts : string
 		^= "Number of aircrafts in system: " ++ numberOfAirCrafts.toString ++ "<br>" ++ getConflictsString(conflicts.pairs);
@@ -59,6 +72,7 @@ interface
 			 
 	schema !dropIfLeavesBoundaryAfterFlying(flyForTime : real)
 		//pre ~willAllAircraftsBeInBoundaryAfterFlying
+		pre forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY
 		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a, flyForTime))
 		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
 			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));

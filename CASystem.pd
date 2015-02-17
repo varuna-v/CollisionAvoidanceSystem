@@ -17,6 +17,12 @@ interface
 	function getAircrafts : seq of Aircraft
 		^= atc.aircrafts;
 	
+	function getMinimumTimeToConflict : string
+		^= atc.getMinimumTimeToConflict;
+	
+	function getAircraftPairsOrderedByTimeToConflict : seq of AircraftPair
+		^= atc.getAircraftPairsOrderedByTimeToConflict;
+	
 	schema !fly
 		post atc!fly(defaultTimeToFlyFor);
 	

@@ -30,7 +30,7 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
                     rret : FileError ;
                 count! - 1 ,
 				context!print(printStuff(system) ++ "\n----------------\n");
-				system!fly;
+				system!fly(5.0);
                 context!readLine(line! , rret!) ;
                 if [line="X" | system.numberOfAirCrafts = 0] : count != 0;
 					[]
