@@ -42,15 +42,24 @@ public class CollisionAvoidanceSystem extends JFrame {
 		c1.gridx = 0;
 		c1.gridy = 0;
 		CraftsMovementDisplay movementDisplay = new CraftsMovementDisplay(aircrafts);
-		movementDisplay.setPreferredSize(new Dimension(screenSize.width - 17, screenSize.height - 250));
+		movementDisplay.setPreferredSize(new Dimension(screenSize.width - 167, screenSize.height - 250));
 		contentpane.add(movementDisplay, c1);
 
+		GridBagConstraints c3 = new GridBagConstraints();
+		c3.fill = GridBagConstraints.BOTH;
+		c3.gridx = 1;
+		c3.gridy = 0;
+		FlightsDetailsDisplay flightsDetailsDisplay = new FlightsDetailsDisplay(aircrafts);
+		flightsDetailsDisplay.setPreferredSize(new Dimension(150, screenSize.height - 40));
+		JScrollPane scrollFlightsDetailsDisplay = new JScrollPane(flightsDetailsDisplay);
+		contentpane.add(scrollFlightsDetailsDisplay, c3);
+		
 		GridBagConstraints c2 = new GridBagConstraints();	
 		c2.fill = GridBagConstraints.BOTH;
 		c2.gridx = 0;
 		c2.gridy = GridBagConstraints.RELATIVE;
 		ConflictsDetailsDisplay cdsDisplay = new ConflictsDetailsDisplay(system);
-		cdsDisplay.setPreferredSize(new Dimension((screenSize.width - 17)/2, 210));
+		cdsDisplay.setPreferredSize(new Dimension(screenSize.width - 167, 210));
 		contentpane.add(cdsDisplay, c2);
 		
 		while (true) {
@@ -60,10 +69,13 @@ public class CollisionAvoidanceSystem extends JFrame {
 				Thread.currentThread().interrupt();
 			}
 			system.fly();
-			movementDisplay.updateAircrafts(retrieveAircrafts());
+			aircrafts =  retrieveAircrafts();
+			movementDisplay.updateAircrafts(aircrafts);
 			cdsDisplay.updateSystem(system);
+			flightsDetailsDisplay.update(aircrafts);
 		}		
 	}
+	
 
 	private void InitialiseCASystem(Dimension screenSize)
 	{
@@ -73,6 +85,7 @@ public class CollisionAvoidanceSystem extends JFrame {
 				(double) (screenSize.height));
 		system = new CASystem(initialATC);
 	}
+	
 
 	private void SetFrameProperties(Dimension screenSize)
 	{
@@ -81,6 +94,7 @@ public class CollisionAvoidanceSystem extends JFrame {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
+	
 	
 	private double getRandom(int rangeMax) {
 		return getRandom(0, rangeMax);
