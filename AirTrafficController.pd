@@ -20,13 +20,8 @@ abstract
 	//invariant forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY
 	//				==>	(let s<<=aircrafts.ran; (forall a::s :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY));
 	
-interface
-	
-	function aircrafts;
-	
-	function numberOfAirCrafts : nat
-		^= #aircrafts;
-	
+confined
+
 	function getPairs : set of AircraftPair
 		^= (let s ^= (for i::0..<#aircrafts yield (for j::(i+1)..<#aircrafts yield AircraftPair{aircrafts[i], aircrafts[j]}).ran).ran;
 			flatten(s));
@@ -38,6 +33,27 @@ interface
 		assert forall a::result.pairs :- a.x.craft1 in aircrafts & a.x.craft2 in aircrafts & a.y = a.x.getConflictStatus;
 		//!!assert #result = ((#aircrafts)*(#aircrafts-1)/2);
 
+	function willAllAircraftsBeInBoundaryAfterFlying(flyForTime : real) : bool
+		^= forall a::aircrafts :- willAircraftBeInBoundryAfterFlying(a, flyForTime);
+	
+	function willAircraftBeInBoundryAfterFlying(aircraft : Aircraft, flyForTime : real) : bool
+		^= (let endPosition ^= aircraft.positionAfterFlying(flyForTime);
+			((minX <= endPosition.x <= maxX) & (minY <= endPosition.y <= maxY)));
+	
+	schema !dropIfLeavesBoundaryAfterFlying(flyForTime : real)
+		//pre ~willAllAircraftsBeInBoundaryAfterFlying
+		pre forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY
+		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a, flyForTime))
+		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
+			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));
+	
+interface
+	
+	function aircrafts;
+	
+	function numberOfAirCrafts : nat
+		^= #aircrafts;
+	
 	function getMinimumTimeToConflict : string
 		^= (let pairs ^= getPairs;
 			([#pairs > 0 &(exists p::pairs :- p.getConflictStatus = ConflictStatus Conflicted)] : "0",
@@ -48,42 +64,24 @@ interface
 	function getAircraftPairsOrderedByTimeToConflict : seq of AircraftPair
 		^= getPairs.opermndec;
 
-	function printConflicts : string
-		^= "Number of aircrafts in system: " ++ numberOfAirCrafts.toString ++ "<br>" ++ getConflictsString(conflicts.pairs);
-		
-	function getConflictsString(cons : set of pair of(AircraftPair, ConflictStatus)) : string
-		decrease #cons
-		^= ([#cons = 0] : "",
-			[] : (let c ^= any k::cons :- k=k;
-				  "Pair <br>" ++ c.x.toString ++ "<br> Status: " ++ c.y.toString ++ "<br>" ++ getConflictsString(cons.remove(c))));
-	
-	function willAllAircraftsBeInBoundaryAfterFlying(flyForTime : real) : bool
-		^= forall a::aircrafts :- willAircraftBeInBoundryAfterFlying(a, flyForTime);
-	
-	function willAircraftBeInBoundryAfterFlying(aircraft : Aircraft, flyForTime : real) : bool
-		^= (let endPosition ^= aircraft.positionAfterFlying(flyForTime);
-			((minX <= endPosition.x <= maxX) & (minY <= endPosition.y <= maxY)));
-	
-    function getConflictStatus(aircraft : Aircraft, incconflicts : map of (AircraftPair -> ConflictStatus)) : ConflictStatus
+	function getConflictStatus(aircraft : Aircraft, incconflicts : map of (AircraftPair -> ConflictStatus)) : ConflictStatus
 		^= (let lst ^= (for those c::incconflicts.pairs :- c.x.craft1 = aircraft | c.x.craft2 = aircraft yield c.y);
 			([ConflictStatus Conflicted in lst] : ConflictStatus Conflicted,
 			 [ConflictStatus PotentialFutureConflict in lst] : ConflictStatus PotentialFutureConflict,
-			 [] : ConflictStatus NoConflict));
-			 
-	schema !dropIfLeavesBoundaryAfterFlying(flyForTime : real)
-		//pre ~willAllAircraftsBeInBoundaryAfterFlying
-		pre forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY
-		post aircrafts != (those a::aircrafts :- willAircraftBeInBoundryAfterFlying(a, flyForTime))
-		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
-			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));
+			 [] : ConflictStatus NoConflict));						
 	
+	schema !changeCraftHeight(identification : string, targetHeight : real)
+		pre exists c::aircrafts :- c.identification = identification
+		post (let craft ^= that c::aircrafts :- c.identification = identification;
+			  aircrafts != (those c::aircrafts :- c.identification ~= identification).append(craft.getCraftTargettingHeight(targetHeight)));
+		 
 	schema !fly(forTime : real)
 		post self!dropIfLeavesBoundaryAfterFlying(forTime) then
 			 aircrafts != (for craft::aircrafts yield craft.getCraftAfterFlying(forTime)) then
 			 (let locConflicts ^= conflicts;
 			  aircrafts != (for craft::aircrafts yield craft.getCraftWithConflictStatus(getConflictStatus(craft, locConflicts))))
 		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
-			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));							
+			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));	
 	
 	build{!aircrafts : seq of Aircraft, !minX : real, ! maxX : real, !minY : real, !maxY : real}
 		pre minX < maxX & minY < maxY 
@@ -92,3 +90,15 @@ interface
 		post !fly(0.0);
 	
 end;
+
+
+//----------- Print -----------
+//	function printConflicts : string
+//		^= "Number of aircrafts in system: " ++ numberOfAirCrafts.toString ++ "<br>" ++ getConflictsString(conflicts.pairs);
+		
+//	function getConflictsString(cons : set of pair of(AircraftPair, ConflictStatus)) : string
+//		decrease #cons
+//		^= ([#cons = 0] : "",
+//			[] : (let c ^= any k::cons :- k=k;
+//				  "Pair <br>" ++ c.x.toString ++ "<br> Status: " ++ c.y.toString ++ "<br>" ++ getConflictsString(cons.remove(c))));
+	

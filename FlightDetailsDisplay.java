@@ -16,6 +16,7 @@ public class FlightDetailsDisplay extends JPanel
 		addLabels();
 		setInitialLabels();
 		setVariableLabels();
+		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
 	}
 	
 	//!! is this method used?
@@ -47,7 +48,7 @@ public class FlightDetailsDisplay extends JPanel
 	{
 		for (int i = 0; i < _labels.length; i++)
 		{
-			if (_labels[i] == null) { _labels[i] = new JLabel(); }
+			if (_labels[i] == null) { _labels[i] = new JLabel(" "); }
 			this.add(_labels[i]);
 		}
 	}

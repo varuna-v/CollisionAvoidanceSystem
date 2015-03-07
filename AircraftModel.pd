@@ -1,0 +1,23 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/AircraftModel.pd
+//* Author:  Varuna
+//* Created: 11:12:39 on Saturday March 7th 2015 UTC
+//*******************************************************
+
+class AircraftModel ^=
+	enum
+		Boeing777200,
+		Boeing777300,
+		Boeing737300,
+		Boeing737400,
+		Boeing737500,
+		Boeing717,
+		Boeing737600,
+		Boeing737900,
+		BoeingMD80,
+		Boeing747400,
+		BoeingMD90,
+		Boeing757200,
+		Boeing767400,
+		BoeingMD11
+	end;

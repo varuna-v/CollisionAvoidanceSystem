@@ -25,14 +25,14 @@ interface
 	function magnitude : real
 		^= ((x^2 + y^2 + z^2)^(0.5));
 	
-	function getTwoDimensionalDistanceFrom(other : Vector) : real //!!
+	function getTwoDimensionalDistanceFrom(other : Vector) : real
 		pre type = VectorType Position & other.type = VectorType Position
-		^= ([x=other.x & y=other.y] : 0.0,
+		^= ([x=other.x & y=other.y] : 0.0, //!!
 			[] :(((x-other.x)^2) + ((y-other.y)^2)) ^ (0.5));
 	
-	//!!function getDistanceFrom(other : Vector)  : real
-		//pre type = VectorType Position & other.type = VectorType Position
-		//^= (((x-other.x)^2) + ((y-other.y)^2) + ((z-other.z)^2)) ^ (1/2);
+	function getDistanceFrom(other : Vector)  : real
+		pre type = VectorType Position & other.type = VectorType Position
+		^= (((x-other.x)^2) + ((y-other.y)^2) + ((z-other.z)^2)) ^ (0.5);
 	
 	function positionAtTime(t : real, velocity : Vector) : Vector
 		pre type = VectorType Position & velocity.type = VectorType Velocity
@@ -45,7 +45,7 @@ interface
 		^= Vector { x + other.x, y + other.y, z + other.z, resultType};
 	
 	redefine function toString : string
-		^= "(" ++ x.toString ++ ")x + (" ++ y.toString ++ ")y + (" ++ z.toString ++ ")z";
+		^= "(" ++ x.rounddn.toString ++ ")x + (" ++ y.rounddn.toString ++ ")y + (" ++ z.rounddn.toString ++ ")z";
 	
 	operator -(other : Vector) : Vector
 		pre type = other.type

@@ -16,13 +16,14 @@ public class ConflictsDetailsDisplay extends JPanel
 	public ConflictsDetailsDisplay(CASystem casystem)
 	{
 		_system = casystem;
-	    setLayout(new GridLayout(0, 2, 10, 10));
+	    setLayout(new GridLayout(0, 2, 20, 10));
 	    this.add(new JLabel("Time to next possible conflict: "));
 	    this.add(_JLMinTimeToConflict);
 	    
 	    for (int i = 0; i < 10; i++)
 	    {
 	    	_JLCriticalPairs[i] = new JLabel();
+	    	_JLCriticalPairs[i].setMinimumSize(new Dimension(60, 20));
 	    	this.add(_JLCriticalPairs[i]);
 	    }
 	}

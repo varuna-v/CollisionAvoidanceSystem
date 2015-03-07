@@ -45,9 +45,6 @@ public class CraftsMovementDisplay extends JPanel {
 		
 		for (Aircraft aircraft : _aircrafts)
 		{
-			String id = aircraft.identification.toString();
-			String sId = id.substring(4, id.length()-1);
-			
 			//Set conflict colour
 			if (aircraft.conflictStatus == ConflictStatus.Conflicted)  
 			    g2d.setColor(Color.red);
@@ -65,14 +62,6 @@ public class CraftsMovementDisplay extends JPanel {
 			g2d.setStroke(new BasicStroke(1.5f));
 			g2d.drawLine(x, y, x, y);
 			
-			//Display aircraft identity
-			JLabel idLabel = new JLabel(sId);
-			idLabel.setForeground(Color.ORANGE);
-			idLabel.setLocation(x, y-1);
-			idLabel.setSize(5, 5);
-			_displayedLabels.add(idLabel);
-			
-			
 			//Draw boundary
 			g2d.setStroke(new BasicStroke(1f));
 			int cx = (int)(x - (aircraft.boundaryRadius/2.0));
@@ -84,14 +73,37 @@ public class CraftsMovementDisplay extends JPanel {
 	
 	private void addLabels()
 	{
-		if (_displayedLabels != null)
+		if (_aircrafts != null)
 		{
-			for (int i = 0; i < _displayedLabels.size(); i++)
+			for (Aircraft aircraft : _aircrafts)
 			{
-				this.add(_displayedLabels.get(i));
+				String id = aircraft.identification.toString();
+				String sId = id.substring(4, id.length()-1);
+				
+				int x = (int)(aircraft.position.x/scale);
+				int y = (int)(aircraft.position.y/scale);
+				
+				//Display aircraft identity
+				JLabel idLabel = new JLabel(sId);
+				idLabel.setForeground(Color.RED);
+				idLabel.setLocation(x, y-1);
+				idLabel.setSize(5, 5);
+				_displayedLabels.add(idLabel);
+				this.add(idLabel);
 			}
 		}
 	}
+	
+//	private void addLabels()
+//	{
+//		if (_displayedLabels != null)
+//		{
+//			for (int i = 0; i < _displayedLabels.size(); i++)
+//			{
+//				this.add(_displayedLabels.get(i));
+//			}
+//		}
+//	}
 	
 	private void removeLabels()
 	{
@@ -101,8 +113,8 @@ public class CraftsMovementDisplay extends JPanel {
 			{
 				JLabel label = _displayedLabels.get(i);
 				this.remove(label);
-				_displayedLabels.remove(label);
 			}
+			_displayedLabels.clear();
 		}
 	}
 }

@@ -23,6 +23,9 @@ interface
 	function getAircraftPairsOrderedByTimeToConflict : seq of AircraftPair
 		^= atc.getAircraftPairsOrderedByTimeToConflict;
 	
+	schema !changeHeight(identification : string, targetHeight : real)
+		post atc!changeCraftHeight(identification, targetHeight);
+	
 	schema !fly
 		post atc!fly(defaultTimeToFlyFor);
 	
