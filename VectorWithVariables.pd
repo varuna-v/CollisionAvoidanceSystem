@@ -1,0 +1,35 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/VectorWithVariables.pd
+//* Author:  Varuna
+//* Created: 14:57:49 on Monday March 9th 2015 UTC
+//*******************************************************
+
+class VectorWithVariables ^=
+abstract
+	
+	var xconst : real;
+	var yconst : real;
+	var zconst : real;
+	var xt : real;
+	var yt : real;
+	var zt : real;
+	
+interface
+	
+	function squareOfMagnitude : QuadraticEquation
+		^= QuadraticEquation{(xt ^ 2) + (yt ^ 2) + (zt ^2), 
+							 (2 * xt * xconst) + (2 * yt * yconst) + (2 * zt * zconst),
+							 (xconst ^ 2) + (yconst ^ 2) + (zconst ^ 2)};
+	
+	operator +(other : VectorWithVariables) : VectorWithVariables
+		^= VectorWithVariables{xconst + other.xconst, yconst + other.yconst, zconst + other.zconst,
+								xt + other.xt, yt + other.yt, zt + other.zt}; 
+								
+	operator -(other : VectorWithVariables) : VectorWithVariables
+		^= VectorWithVariables{xconst - other.xconst, yconst - other.yconst, zconst - other.zconst,
+								xt - other.xt, yt - other.yt, zt - other.zt}; 
+			 
+	build{!xconst : real, !yconst : real, !zconst : real, !xt : real, !yt : real, !zt : real};
+end;
+
+// End

@@ -13,7 +13,7 @@ public class FlightsDetailsDisplay extends JPanel
 	
 	public FlightsDetailsDisplay(List<Aircraft> aircrafts)
 	{
-		setLayout(new GridLayout(numberOfPanels, 1, 0, 4));
+		setLayout(new GridLayout(numberOfPanels, 1));
 		addDisplays(aircrafts);
 	}
 	

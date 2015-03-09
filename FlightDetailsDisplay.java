@@ -16,7 +16,7 @@ public class FlightDetailsDisplay extends JPanel
 		addLabels();
 		setInitialLabels();
 		setVariableLabels();
-		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+		setBorder(BorderFactory.createLineBorder(getForeground()));
 	}
 	
 	//!! is this method used?

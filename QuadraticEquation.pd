@@ -1,0 +1,35 @@
+//*******************************************************
+//* File:    C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/QuadraticEquation.pd
+//* Author:  Varuna
+//* Created: 15:02:04 on Monday March 9th 2015 UTC
+//*******************************************************
+
+//!!rename to equation
+class QuadraticEquation ^=
+abstract
+	
+	var x2 : real;
+	var x : real;
+	var constant : real;
+	
+interface
+	
+	function getXForMinimumValue : real
+		pre x2 > 0.0
+		^= (let derivative ^= differentiateWRTx;
+			((derivative.constant * -1.0) / derivative.x));			
+	
+	function differentiateWRTx : QuadraticEquation
+		^= QuadraticEquation{0.0, 2.0 * x2, x};
+	
+	operator +(other : QuadraticEquation) : QuadraticEquation
+		^= QuadraticEquation{x2 + other.x2, x + other.x, constant + other.constant};
+		
+	operator - (other : QuadraticEquation) : QuadraticEquation
+		^= QuadraticEquation{x2 - other.x2, x - other.x, constant - other.constant};
+	
+	build{!x2 : real, !x : real, !constant : real};
+	
+end;
+
+// End

@@ -36,11 +36,13 @@ public class AlterPathDisplay extends JPanel
 		
 		lblError = new JLabel();
 		lblError.setForeground(Color.RED);
+		
+		setBorder(BorderFactory.createLoweredBevelBorder());
 	}	
 	
 	public void update(List<Aircraft> aircrafts)
 	{
-		//configureIdentitiesComboBox(aircrafts);
+		configureIdentitiesComboBox(aircrafts);
 	}
 	
 	public AlterPathPair getDataToAlterPath(CASystem system)
@@ -85,6 +87,5 @@ public class AlterPathDisplay extends JPanel
 		{
 			cbxIdentities.setEnabled(false);
 		}
-		
 	}
 }

@@ -8,7 +8,7 @@ class Aircraft ^=
 abstract
 
 	//Time added to hypothetical time to get maximum time before potential conflict is declared
-	const safteyTime ^= 0.3; //seconds
+	const safetyTime ^= 0.3; //seconds
 	const verticalBreakPoint ^= 8800.00; //meters
 	const flytimeForHypotheticalCollisionAnalysis ^= 0.01; //seconds
 	const cosOfDescentAngle ^= 0.99; //cos 3.0 degrees
@@ -29,15 +29,31 @@ abstract
 
 confined
 	
+	function futureConflict(other : Aircraft) : bool
+		^= getMinimumDistanceBetweenPaths(other) <= getBiggerRadius(other);
+	
+	function getMinimumDistanceBetweenPaths(other : Aircraft) : real
+		^= (let tForMinD ^= getTimeToMinimumDistanceBetweenPaths(other);
+			([tForMinD < 0.0] : 100000.00, //any large number
+			 [] : positionAfterFlying(tForMinD).getDistanceFrom(other.positionAfterFlying(tForMinD))));
+	
+	function getSquareOfMagnitudeOfPostionOfOtherWRTThis(other : Aircraft) : QuadraticEquation
+		^= (let q1 ^= VectorWithVariables{position.x, position.y, position.z, velocity.x, velocity.y, velocity.z};
+		   let q2 ^= VectorWithVariables{other.position.x, other.position.y, other.position.z, other.velocity.x, other.velocity.y, other.velocity.z};
+		   let q21 ^= q2 - q1;
+		   q21.squareOfMagnitude);
+	
+	function getTimeToMinimumDistanceBetweenPaths(other : Aircraft) : real
+		^= (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
+		   magSquare.getXForMinimumValue);
+	
+	function getBiggerRadius(other : Aircraft) : real
+		^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
+			[] : other.boundaryRadius);
+	
 	function isInConflictWith(other : Aircraft) : bool
-		^= (let biggerRadius ^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
-								 [] : other.boundaryRadius);
+		^= (let biggerRadius ^= getBiggerRadius(other);
 			position.getTwoDimensionalDistanceFrom(other.position) <= biggerRadius);
-
-	function potentialFutureConflict(other : Aircraft) : bool
-		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= ([~isFlyingTowards(other)] : false,
-			[] : timeToConflict(other) <= safteyTime);
 			
 	function timeToCollision(other : Aircraft) : real
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
@@ -71,12 +87,27 @@ confined
 		^= (let cosOfAngle ^= ([isAscent] : getCosineOfAngleForClimb,
 							   [] : cosOfDescentAngle);
 			let vx2plusvy2 ^= (((velocity.x) ^ 2) + ((velocity.y) ^ 2));
-			let vz ^= (((vx2plusvy2/((cosOfAngle)*(vx2plusvy2 ^ (0.5)))) ^ 2) - (vx2plusvy2)) ^ (1/2);//calculated using dot product
-			Vector{velocity.x, velocity.y, vz, VectorType Velocity});
+			let vz ^= (((vx2plusvy2/((cosOfAngle)*(vx2plusvy2 ^ (0.5)))) ^ 2) - (vx2plusvy2)) ^ (0.5);//calculated using dot product
+			let elevationMultiplier ^= ([isAscent] : 1.0,
+										[] : -1.0);
+			Vector{velocity.x, velocity.y, vz * elevationMultiplier, VectorType Velocity});
 			
+	function hasCrossedTargetHeight(newPosition : Vector) : bool
+		^= isElevatingOrDescending & ((position.z < targetHeight & targetHeight <= newPosition.z) 
+										| (position.z > targetHeight & targetHeight >= newPosition.z));
+	
+	function getPositionAfterStraightFlight(time : real, velocityForFlight : Vector, startPosition : Vector) : Vector
+		^= startPosition.plus((velocityForFlight * time), VectorType Position);
+		
+	function getTimeToTargetHeight : real
+		^= (targetHeight - position.z) / velocity.z;
+	
 	build{!position : Vector, !velocity : Vector, !isElevatingOrDescending : bool, !targetHeight : real, !boundaryRadius : real, !status : AircraftStatus, !identification : string, !model : AircraftModel}
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity
 		post conflictStatus != ConflictStatus NoConflict;
+		
+	build{!position : Vector, !velocity : Vector, !isElevatingOrDescending : bool, !targetHeight : real, !boundaryRadius : real, !status : AircraftStatus, !identification : string, !conflictStatus : ConflictStatus, !model : AircraftModel}
+		pre  position.type = VectorType Position & velocity.type = VectorType Velocity;
 			
 interface	
 
@@ -102,25 +133,29 @@ interface
 	function getConflictStatus(other : Aircraft) : ConflictStatus
 		^= ([~breaksMinimumVerticalSeparation(other)] : ConflictStatus NoConflict,
 			[isInConflictWith(other)] : ConflictStatus Conflicted,
-			[other.velocity ~= velocity & potentialFutureConflict(other)] : ConflictStatus PotentialFutureConflict,
+			[other.velocity ~= velocity & futureConflict(other)] : ConflictStatus PotentialFutureConflict,
 			[] : ConflictStatus NoConflict);
 		 //assert result = other.getConflictStatus(self);
-	
+		 
 	function positionAfterFlying(time : real) : Vector
 		^= position.plus((velocity * time), VectorType Position);
 	
 	function getCraftAfterFlying(time : real) : Aircraft
-		^= (let posAfterFlying ^= positionAfterFlying(time);
-			([~isElevatingOrDescending] : Aircraft {posAfterFlying, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, model},
-			 [(position.z < targetHeight & posAfterFlying.z > targetHeight) 
-				| (position.z > targetHeight & posAfterFlying.z < targetHeight)] : Aircraft {posAfterFlying, Vector{velocity.x, velocity.y, 0.0, VectorType Velocity}, false, 0.0, boundaryRadius, status, identification, model}));
+		^= (let posAfterStraightFlight ^= positionAfterFlying(time);
+			([hasCrossedTargetHeight(posAfterStraightFlight)] : (let timeToTarget ^= getTimeToTargetHeight; //!!assert timeToTarget < time
+										 let posAtTarget ^= positionAfterFlying(timeToTarget);
+										 let newVelocity ^= Vector{velocity.x, velocity.y, VectorType Velocity};
+										 let newPos ^= getPositionAfterStraightFlight(time - timeToTarget, newVelocity, posAtTarget);
+										 Aircraft {newPos, newVelocity, false, 0.0, boundaryRadius, status, identification, model})
+										,
+			[] : Aircraft {posAfterStraightFlight, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, model}));
 	
 	function timeToConflict(other : Aircraft) : real
-		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= (let timeToColl ^= timeToCollision(other);
-			([timeToColl >= 0.0] : timeToColl - timeToHypotheticalCollisionWith(other),
-			  [] : 100000.00)); //any large number
-	
+		^= ([~futureConflict(other)] : 100000.00, //any large number
+			[] : (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
+				  let eqn ^= magSquare - QuadraticEquation{0.0, 0.0, (getBiggerRadius(other) ^ 2.0)};
+				  eqn.getXForMinimumValue));
+				  
 	redefine function toString : string
 		^= "\t Position: " ++ position.toString ++ "<br>\t Velocity: " ++ velocity.toString ++ "<br>\t Conflict Status: " ++ conflictStatus.toString;
 	
@@ -128,22 +163,17 @@ interface
 		//^= identification = other.identification;
 	
 	function getCraftWithConflictStatus(cs : ConflictStatus) : Aircraft
-		^= Aircraft{position, velocity, boundaryRadius, status, identification, cs, model};
+		^= Aircraft{position, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, cs, model};
 	
 	function getCraftTargettingHeight(heightToTarget : real) : Aircraft
-		^= ([heightToTarget = position.z] : Aircraft{position, velocity, boundaryRadius, status, identification, model},
+		^= ([heightToTarget = position.z] : Aircraft{position, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, model},
 			[] : Aircraft{position, getVelocityForAscentOrDescent(heightToTarget > position.z), true, heightToTarget, boundaryRadius, status, identification, model});
-	
+			
 	build{!position : Vector, !velocity : Vector, !boundaryRadius : real, !status : AircraftStatus, !identification : string, !model : AircraftModel}
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity & ~identification.empty
 		post conflictStatus != ConflictStatus NoConflict,
 			isElevatingOrDescending != false,
 			targetHeight != 0.0;
-		
-	build{!position : Vector, !velocity : Vector, ! boundaryRadius : real, !status : AircraftStatus, !identification : string, !conflictStatus : ConflictStatus, !model : AircraftModel}
-		pre  position.type = VectorType Position & velocity.type = VectorType Velocity & ~identification.empty
-		post isElevatingOrDescending != false,
-			 targetHeight != 0.0;
-			
+	
 end;
 
