@@ -11,15 +11,11 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
 	pre #args > 0
 	post change context , ret satisfy undefRel(context' , ret') , ret' = 0
 	via
-		let initialCrafts ^= seq of Aircraft {Aircraft {Vector{10.00  , 1000.00 , 21353.00, VectorType Position}, Vector{234.00, 93.00, 0.00, VectorType Velocity}, 50.00, AircraftStatus FlyingAtLevel, "A", AircraftModel Boeing777200},
-											  Aircraft {Vector{67.00  , 5.00 , 3434.00, VectorType Position}, Vector{54.00, 146.00, 0.00, VectorType Velocity}, 20.00, AircraftStatus FlyingAtLevel, "B", AircraftModel Boeing777200},
-											  Aircraft {Vector{879.00 , 664.00, 7834.00, VectorType Position}, Vector{265.00, 86.00, 0.00, VectorType Velocity}, 30.00, AircraftStatus FlyingAtLevel, "C", AircraftModel Boeing777200},
-											  Aircraft {Vector{435.00 , 234.00, 45534.00, VectorType Position}, Vector{342.00, 134.00, 0.00, VectorType Velocity}, 25.00, AircraftStatus FlyingAtLevel, "D", AircraftModel Boeing777200},
-											  Aircraft {Vector{7568.00, 6675.00, 34456.00, VectorType Position}, Vector{57.00, 75.00, 0.00, VectorType Velocity}, 35.00, AircraftStatus FlyingAtLevel, "E", AircraftModel Boeing777200},
-											  Aircraft {Vector{453.00 , 5753.00, 3468.00, VectorType Position}, Vector{23.00, 105.00, 0.00, VectorType Velocity}, 10.00, AircraftStatus FlyingAtLevel, "F", AircraftModel Boeing777200},
-											  Aircraft {Vector{987.00 , 5342.00, 344.00, VectorType Position}, Vector{364.00, 63.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G", AircraftModel Boeing777200}};
+		let initialCrafts ^= seq of Aircraft {Aircraft {Vector{5.0  , 2.0 , 1000.00, VectorType Position}, Vector{-3.0, 1.00, 0.00, VectorType Velocity}, 50.00, AircraftStatus FlyingAtLevel, "A", AircraftModel Boeing777200},
+											  Aircraft {Vector{4.00  , 3.00 , 1000.00, VectorType Position}, Vector{-1.00, 2.00, 0.00, VectorType Velocity}, 20.00, AircraftStatus FlyingAtLevel, "B", AircraftModel Boeing777200}};
 		var system : AirTrafficController != AirTrafficController{initialCrafts, 0.00, 10000.00, 0.00, 10000.00};
         context!print("System booted\n") ;
+		//context!print(system.getMinDist);
         loop
     	    var count : nat! = 30 ;
             change context , system

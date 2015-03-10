@@ -95,10 +95,10 @@ interface
 			& (forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]))
 			& (forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY)
 		post !fly(0.0);
-	
+		
 	//!!test remove
 	//function getMinDist : string
-		//^= aircrafts[0].toString ++ "\n" ++ aircrafts[2].toString ++ "\n" ++ aircrafts[0].getMinimumDistanceBetweenPaths(aircrafts[2]).toString ++ "\n" ++ aircrafts[0].getTimeToMinimumDistanceBetweenPaths(aircrafts[2]).toString;
+	//	^= aircrafts[0].toString ++ "\n" ++ aircrafts[1].toString ++ "\n" ++ aircrafts[0].getMinimum2DDistanceBetweenPaths(aircrafts[1]).toString ++ "\n" ++ aircrafts[0].getTimeToMinimum2DDistanceBetweenPaths(aircrafts[1]).toString;
 end;
 
 

@@ -37,6 +37,9 @@ interface
 	operator - (other : QuadraticEquation) : QuadraticEquation
 		^= QuadraticEquation{a - other.a, b - other.b, c - other.c};
 	
+	redefine function toString : string
+		^= "\n(" ++ a.toString ++ ") x^2 + (" ++ b.toString ++ ") x + (" ++ c.toString ++")";
+	
 	build{!a : real, !b : real, !c : real};
 	
 end;

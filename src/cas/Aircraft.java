@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Aircraft.pd'
-//* by Perfect Developer version 6.10.01 at 12:35:31 UTC on Tuesday March 10th 2015
+//* by Perfect Developer version 6.10.01 at 23:07:43 UTC on Tuesday March 10th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etf8562.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etf51FB.tmp
 //***********************************************************************************************
 
 package cas;
@@ -81,18 +81,19 @@ public class Aircraft extends _eAny
     protected double targetHeight;
     protected boolean futureConflict (Aircraft other)
     {
-        return (timeToConflict (other) < 100.0);
+        return (breaksMinimumVerticalSeparation (other) && (getMinimum2DDistanceBetweenPaths (other)
+            <= _eSystem._oDiv (getBiggerRadius (other), 1.4)));
     }
 
-    protected double getMinimumDistanceBetweenPaths (Aircraft other)
+    protected double getMinimum2DDistanceBetweenPaths (Aircraft other)
     {
-        double _vLet_tForMinD_36_17 = getTimeToMinimumDistanceBetweenPaths (other);
+        double _vLet_tForMinD_36_17 = getTimeToMinimum2DDistanceBetweenPaths (other);
         return ((_vLet_tForMinD_36_17 < 0.0) ?
         100000.0 : positionAfterFlying (_vLet_tForMinD_36_17).getDistanceFrom (other.
             positionAfterFlying (_vLet_tForMinD_36_17)));
     }
 
-    protected double getTimeToMinimumDistanceBetweenPaths (Aircraft other)
+    protected double getTimeToMinimum2DDistanceBetweenPaths (Aircraft other)
     {
         QuadraticEquation _vLet_magSquare_41_17 = getSquareOfMagnitudeOfPostionOfOtherWRTThis (other)
             ;
@@ -102,9 +103,9 @@ public class Aircraft extends _eAny
     protected QuadraticEquation getSquareOfMagnitudeOfPostionOfOtherWRTThis (Aircraft other)
     {
         VectorWithVariables _vLet_q1_45_17 = new VectorWithVariables (position.x, position.y,
-            position.z, velocity.x, velocity.y, velocity.z);
+            velocity.x, velocity.y);
         VectorWithVariables _vLet_q2_46_16 = new VectorWithVariables (other.position.x, other.
-            position.y, other.position.z, other.velocity.x, other.velocity.y, other.velocity.z);
+            position.y, other.velocity.x, other.velocity.y);
         VectorWithVariables _vLet_q21_47_16 = _vLet_q2_46_16._oMinus (_vLet_q1_45_17);
         return _vLet_q21_47_16.squareOfMagnitude ();
     }
@@ -117,8 +118,18 @@ public class Aircraft extends _eAny
 
     protected boolean isInConflictWith (Aircraft other)
     {
-        double _vLet_biggerRadius_55_17 = getBiggerRadius (other);
-        return (position.getTwoDimensionalDistanceFrom (other.position) <= _vLet_biggerRadius_55_17);
+        boolean _vCondResult_55_51;
+        if (breaksMinimumVerticalSeparation (other))
+        {
+            double _vLet_biggerRadius_55_58 = getBiggerRadius (other);
+            _vCondResult_55_51 = (position.getTwoDimensionalDistanceFrom (other.position) <=
+                _vLet_biggerRadius_55_58);
+        }
+        else
+        {
+            _vCondResult_55_51 = false;
+        }
+        return _vCondResult_55_51;
     }
 
     protected double timeToCollision (Aircraft other)
@@ -257,8 +268,8 @@ public class Aircraft extends _eAny
 
     public boolean breaksMinimumVerticalSeparation (Aircraft other)
     {
-        double _vLet_heightDifference_117_17 = ((position.y < other.position.y) ?
-        (other.position.y - position.y) : (position.y - other.position.y));
+        double _vLet_heightDifference_117_17 = ((position.z < other.position.z) ?
+        (other.position.z - position.z) : (position.z - other.position.z));
         return (((position.y <= Aircraft.verticalBreakPoint) && (other.position.y <= Aircraft.
             verticalBreakPoint)) ?
         (_vLet_heightDifference_117_17 < 300.0) : (_vLet_heightDifference_117_17 < 600.0));
@@ -303,11 +314,18 @@ public class Aircraft extends _eAny
 
     public double timeToConflict (Aircraft other)
     {
-        QuadraticEquation _vLet_magSquare_144_18 = getSquareOfMagnitudeOfPostionOfOtherWRTThis (
-            other);
-        QuadraticEquation _vLet_eqn_145_23 = _vLet_magSquare_144_18._oMinus (new QuadraticEquation (
-            0.0, 0.0, _eSystem._oExp (getBiggerRadius (other), 2.0)));
-        return _vLet_eqn_145_23.solve ();
+        if ((!futureConflict (other)))
+        {
+            return 100000.0;
+        }
+        else
+        {
+            QuadraticEquation _vLet_magSquare_143_23 = getSquareOfMagnitudeOfPostionOfOtherWRTThis (
+                other);
+            QuadraticEquation _vLet_eqn_144_23 = _vLet_magSquare_143_23._oMinus (new
+                QuadraticEquation (0.0, 0.0, _eSystem._oExp (getBiggerRadius (other), 2.0)));
+            return _vLet_eqn_144_23.solve ();
+        }
     }
 
     public _eSeq _rtoString ()
@@ -351,7 +369,7 @@ public class Aircraft extends _eAny
             {
                 if (!((((_vposition.type == VectorType.Position) && (_vvelocity.type == VectorType.
                     Velocity)) && (!_videntification.empty ())))) throw new _xPre (
-                    "Aircraft.pd:162,28");
+                    "Aircraft.pd:161,28");
             }
             catch (_xCannotEvaluate _lException)
             {
@@ -367,7 +385,7 @@ public class Aircraft extends _eAny
         conflictStatus = ConflictStatus.NoConflict;
         isElevatingOrDescending = false;
         targetHeight = 0.0;
-        _lc_Aircraft ("Aircraft.pd:165,13");
+        _lc_Aircraft ("Aircraft.pd:164,13");
     }
 
     public boolean _lEqual (Aircraft _vArg_12_11)

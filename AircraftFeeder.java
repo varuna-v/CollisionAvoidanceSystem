@@ -11,8 +11,8 @@ public class AircraftFeeder
 	
 	private Random random = new Random();
 	
-	private static final int minZ = 9144; //meters
-	private static final int maxZ = 13716; //meters
+	private static final int minZ = 20000;//9144; //meters
+	private static final int maxZ = 21000;//13716; //meters
 	
 	public AircraftFeeder(int atcMaxX, int atcMaxY)
 	{

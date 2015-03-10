@@ -30,20 +30,20 @@ abstract
 confined
 	
 	function futureConflict(other : Aircraft) : bool
-		^= getMinimumDistanceBetweenPaths(other) <= getBiggerRadius(other);
-	
-	function getMinimumDistanceBetweenPaths(other : Aircraft) : real
-		^= (let tForMinD ^= getTimeToMinimumDistanceBetweenPaths(other);
+		^= breaksMinimumVerticalSeparation(other) & (getMinimum2DDistanceBetweenPaths(other) <= (getBiggerRadius(other) / 1.4));
+	   
+	function getMinimum2DDistanceBetweenPaths(other : Aircraft) : real
+		^= (let tForMinD ^= getTimeToMinimum2DDistanceBetweenPaths(other);
 			([tForMinD < 0.0] : 100000.00, //any large number
 			 [] : positionAfterFlying(tForMinD).getDistanceFrom(other.positionAfterFlying(tForMinD))));
 			 
-	function getTimeToMinimumDistanceBetweenPaths(other : Aircraft) : real
+	function getTimeToMinimum2DDistanceBetweenPaths(other : Aircraft) : real
 		^= (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
 		   magSquare.getXForMinimumValue);
 		   
 	function getSquareOfMagnitudeOfPostionOfOtherWRTThis(other : Aircraft) : QuadraticEquation
-		^= (let q1 ^= VectorWithVariables{position.x, position.y, position.z, velocity.x, velocity.y, velocity.z};
-		   let q2 ^= VectorWithVariables{other.position.x, other.position.y, other.position.z, other.velocity.x, other.velocity.y, other.velocity.z};
+		^= (let q1 ^= VectorWithVariables{position.x, position.y, velocity.x, velocity.y};
+		   let q2 ^= VectorWithVariables{other.position.x, other.position.y, other.velocity.x, other.velocity.y};
 		   let q21 ^= q2 - q1;
 		   q21.squareOfMagnitude);
 	
@@ -52,7 +52,7 @@ confined
 			[] : other.boundaryRadius);
 	
 	function isInConflictWith(other : Aircraft) : bool
-		^= (let biggerRadius ^= getBiggerRadius(other);
+		^= breaksMinimumVerticalSeparation(other) & (let biggerRadius ^= getBiggerRadius(other);
 			position.getTwoDimensionalDistanceFrom(other.position) <= biggerRadius);
 			
 	function timeToCollision(other : Aircraft) : real
@@ -99,7 +99,7 @@ confined
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity;
 			
 interface	
-	
+		   
 	function conflictStatus;
 	
 	function position;
@@ -114,8 +114,8 @@ interface
 		^= velocity.magnitude;
 		
 	function breaksMinimumVerticalSeparation(other : Aircraft) : bool
-		^= (let heightDifference ^= ([other.position.y > position.y] : other.position.y - position.y,
-									 [] : position.y - other.position.y);
+		^= (let heightDifference ^= ([other.position.z > position.z] : other.position.z - position.z,
+									 [] : position.z - other.position.z);
 			([position.y <= verticalBreakPoint & other.position.y <= verticalBreakPoint] : heightDifference < 300.00, //meters
 			[] : heightDifference < 600.00)); //meters
 	
@@ -139,11 +139,10 @@ interface
 			[] : Aircraft {posAfterStraightFlight, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, model}));
 	
 	function timeToConflict(other : Aircraft) : real
-		^= //([~futureConflict(other)] : 100000.00, //any large number
-			//[] :
-			(let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
+		^= ([~futureConflict(other)] : 100000.00, //any large number
+			[] : (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
 				  let eqn ^= magSquare - QuadraticEquation{0.0, 0.0, (getBiggerRadius(other) ^ 2.0)};
-				  eqn.solve);
+				  eqn.solve));
 				  
 	redefine function toString : string
 		^= "\n Id:" ++ identification ++ "\n Position: " ++ position.toString ++ "\n Velocity: " ++ velocity.toString ++ "\n Conflict Status: " ++ conflictStatus.toString ++ "\n" ++ boundaryRadius.toString;

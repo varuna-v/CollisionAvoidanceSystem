@@ -30,8 +30,14 @@ public class CollisionAvoidanceSystem extends JFrame {
 		CollisionAvoidanceSystem display = new CollisionAvoidanceSystem();
 	}
 
+	private void doTheTest()
+	{
+	}
+	
 	public CollisionAvoidanceSystem() {
-
+  
+		doTheTest();
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		InitialiseCASystem(screenSize);
 		SetFrameProperties(screenSize);

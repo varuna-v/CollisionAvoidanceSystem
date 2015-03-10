@@ -78,7 +78,7 @@ public class AlterPathDisplay extends JPanel
 			for(Aircraft aircraft : aircrafts)
 			{
 				String id = aircraft.identification.toString();
-				String sId = id.substring(4, id.length()-1);
+				String sId = id.substring(4, id.length()-1).replaceAll(",", "");
 				cbxIdentities.addItem(sId);
 			}
 			cbxIdentities.setEnabled(true);
