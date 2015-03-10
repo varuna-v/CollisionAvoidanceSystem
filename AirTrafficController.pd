@@ -83,12 +83,22 @@ interface
 		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
 			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));	
 	
+	schema !addAircraft(aircraft : Aircraft)
+		//pre (forall i::0..<#aircrafts :- aircraft ~= aircrafts[i])
+			//& (minX = aircraft.position.x | aircraft.position.x = maxX)
+			//& (minY = aircraft.position.y | aircraft.position.y = maxY)
+		post aircrafts != aircrafts.append(aircraft) then
+			 !fly(0.0);
+	
 	build{!aircrafts : seq of Aircraft, !minX : real, ! maxX : real, !minY : real, !maxY : real}
 		pre minX < maxX & minY < maxY 
 			& (forall i::0..<#aircrafts :-(forall j::(i+1)..<#aircrafts :- aircrafts[i] ~= aircrafts[j]))
 			& (forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY)
 		post !fly(0.0);
 	
+	//!!test remove
+	//function getMinDist : string
+		//^= aircrafts[0].toString ++ "\n" ++ aircrafts[2].toString ++ "\n" ++ aircrafts[0].getMinimumDistanceBetweenPaths(aircrafts[2]).toString ++ "\n" ++ aircrafts[0].getTimeToMinimumDistanceBetweenPaths(aircrafts[2]).toString;
 end;
 
 

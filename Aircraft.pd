@@ -8,9 +8,9 @@ class Aircraft ^=
 abstract
 
 	//Time added to hypothetical time to get maximum time before potential conflict is declared
-	const safetyTime ^= 0.3; //seconds
+	//const safetyTime ^= 0.3; //seconds
 	const verticalBreakPoint ^= 8800.00; //meters
-	const flytimeForHypotheticalCollisionAnalysis ^= 0.01; //seconds
+	//const flytimeForHypotheticalCollisionAnalysis ^= 0.01; //seconds
 	const cosOfDescentAngle ^= 0.99; //cos 3.0 degrees
 	
 	var position : Vector;
@@ -36,16 +36,16 @@ confined
 		^= (let tForMinD ^= getTimeToMinimumDistanceBetweenPaths(other);
 			([tForMinD < 0.0] : 100000.00, //any large number
 			 [] : positionAfterFlying(tForMinD).getDistanceFrom(other.positionAfterFlying(tForMinD))));
-	
+			 
+	function getTimeToMinimumDistanceBetweenPaths(other : Aircraft) : real
+		^= (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
+		   magSquare.getXForMinimumValue);
+		   
 	function getSquareOfMagnitudeOfPostionOfOtherWRTThis(other : Aircraft) : QuadraticEquation
 		^= (let q1 ^= VectorWithVariables{position.x, position.y, position.z, velocity.x, velocity.y, velocity.z};
 		   let q2 ^= VectorWithVariables{other.position.x, other.position.y, other.position.z, other.velocity.x, other.velocity.y, other.velocity.z};
 		   let q21 ^= q2 - q1;
 		   q21.squareOfMagnitude);
-	
-	function getTimeToMinimumDistanceBetweenPaths(other : Aircraft) : real
-		^= (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
-		   magSquare.getXForMinimumValue);
 	
 	function getBiggerRadius(other : Aircraft) : real
 		^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
@@ -60,17 +60,6 @@ confined
 		^= (let velocityDifference ^= other.velocity - velocity;
 			((position - other.position).dotProduct(velocityDifference)/((velocityDifference.magnitude)^2)));
 		//!!assert result >= 0.00;
-	
-	//Minimum time to collision if the only info is that the aircrafts are not in conflict
-	function timeToHypotheticalCollisionWith(other : Aircraft) : real
-		pre ~isInConflictWith(other) & other.velocity ~= velocity
-		^= (let smallerRadius ^= ([boundaryRadius < other.boundaryRadius] : boundaryRadius,
-															[] : other.boundaryRadius);
-									   smallerRadius/(velocity-other.velocity).magnitude)
-		assert result > timeToCollision(other); //as they are not in conflict
-	
-	function isFlyingTowards(other : Aircraft) : bool
-		^= positionAfterFlying(flytimeForHypotheticalCollisionAnalysis).getTwoDimensionalDistanceFrom(other.positionAfterFlying(flytimeForHypotheticalCollisionAnalysis)) < position.getTwoDimensionalDistanceFrom(other.position);
 	
 	function getCosineOfAngleForClimb : real
 		^= ([model = AircraftModel Boeing777200 | model = AircraftModel Boeing777300] : 0.97, //cos 14.0,
@@ -110,7 +99,7 @@ confined
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity;
 			
 interface	
-
+	
 	function conflictStatus;
 	
 	function position;
@@ -146,18 +135,18 @@ interface
 										 let posAtTarget ^= positionAfterFlying(timeToTarget);
 										 let newVelocity ^= Vector{velocity.x, velocity.y, VectorType Velocity};
 										 let newPos ^= getPositionAfterStraightFlight(time - timeToTarget, newVelocity, posAtTarget);
-										 Aircraft {newPos, newVelocity, false, 0.0, boundaryRadius, status, identification, model})
-										,
+										 Aircraft {newPos, newVelocity, false, 0.0, boundaryRadius, status, identification, model}),
 			[] : Aircraft {posAfterStraightFlight, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, model}));
 	
 	function timeToConflict(other : Aircraft) : real
-		^= ([~futureConflict(other)] : 100000.00, //any large number
-			[] : (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
+		^= //([~futureConflict(other)] : 100000.00, //any large number
+			//[] :
+			(let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
 				  let eqn ^= magSquare - QuadraticEquation{0.0, 0.0, (getBiggerRadius(other) ^ 2.0)};
-				  eqn.getXForMinimumValue));
+				  eqn.solve);
 				  
 	redefine function toString : string
-		^= "\t Position: " ++ position.toString ++ "<br>\t Velocity: " ++ velocity.toString ++ "<br>\t Conflict Status: " ++ conflictStatus.toString;
+		^= "\n Id:" ++ identification ++ "\n Position: " ++ position.toString ++ "\n Velocity: " ++ velocity.toString ++ "\n Conflict Status: " ++ conflictStatus.toString ++ "\n" ++ boundaryRadius.toString;
 	
 	//operator =(other : Aircraft) : bool
 		//^= identification = other.identification;

@@ -32,7 +32,7 @@ public class AircraftFeeder
 	
 	private int getRandomInt(int rangeMin, int rangeMax)
 	{
-		return rangeMin + (rangeMax - rangeMin) * random.nextInt();
+		return rangeMin + random.nextInt(rangeMax);
 	}
 	
 	private double getRandomHeight()
@@ -61,14 +61,14 @@ public class AircraftFeeder
 			case(3) : return new Vector(getRandom(_Xboundary[1]),
 					0, getRandomHeight(), VectorType.Position,
 					(VectorType) null);
-			default : return new Vector(getRandom(_Yboundary[1]),
+			default : return new Vector(getRandom(_Xboundary[1]),
 					_Yboundary[1], getRandomHeight(), VectorType.Position,
 					(VectorType) null);
 		}
 	}
 	
-	private static final int _velocityLower = 6205; //kilometers 000;
-	private static final int _velocityUpper = 6548; // kilometers 000;
+	private static final int _velocityLower = 605; //X 10000 kilometers ;
+	private static final int _velocityUpper = 648; //X 10000 kilometers ;
 	private Vector getRandomVelocity()
 	{
 		return new Vector(getRandom(_velocityLower, _velocityUpper) * getRandom(-1, 1)
@@ -76,35 +76,43 @@ public class AircraftFeeder
 						  VectorType.Velocity, (VectorType) null);
 	}
 	
-	private static int _identifierCounter = 0;
+	private static int _identifierCounter = 9;
 	private String getIdentifier()
 	{
-		int num = 64 + _identifierCounter; //65n + k
+		//int num = 64 + _identifierCounter; //65n + k
 		String identifier = "";
 		
-		int n = num / 65;
+		int n = _identifierCounter / 26;
 		for (int i = 1; i <= n; i++)
 			identifier += "A";
-		int k = num % 65;
-		identifier += String.valueOf((char)(k));
+		int k = _identifierCounter % 26;
+		identifier += String.valueOf((char)(65 + k));
 		_identifierCounter++;
 		return identifier;
 	}
 	
-	private AircraftModel getRandomAircraftModel()
+	private int getRandomAircraftModel()
 	{
-		return new AircraftModel(getRandomInt(0, 13));
+		return getRandomInt(0, 13);
 	}
 	
-	private Aircraft getAircraftToInject()
+	public Aircraft getAircraftToInject()
 	{
-		return new Aircraft(getAPositionForInjectedAircraft(), getRandomVelocity(), getRandom(4, 50),
-				AircraftStatus.FlyingAtLevel, (AircraftStatus) null,
-				_eSystem._lString(getIdentifier()), getRandomAircraftModel());
+		return new Aircraft(getAPositionForInjectedAircraft(),
+							getRandomVelocity(), 
+							getRandom(4, 50),
+							AircraftStatus.FlyingAtLevel, 
+							(AircraftStatus) null,
+							_eSystem._lString(getIdentifier()),
+							(char) 0,
+							getRandomAircraftModel(), 
+							(AircraftModel) null);
 	}
 	
 	
-	private _eSeq getInitialSeqOfAircrafts(int maxX, int maxY) {
+	public _eSeq getInitialSeqOfAircrafts() {
+		int maxX = _Xboundary[1];
+		int maxY = _Yboundary[1];
 		return new _eSeq()._lAppend(
 				((_eAny) new Aircraft(new Vector(getRandom(maxX),
 						getRandom(maxY), 21353.0, VectorType.Position,

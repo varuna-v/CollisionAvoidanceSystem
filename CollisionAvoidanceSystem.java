@@ -24,6 +24,7 @@ public class CollisionAvoidanceSystem extends JFrame {
 	private FlightsDetailsDisplay flightsDetailsDisplay;
 	private ConflictsDetailsDisplay cdsDisplay;
 	private AlterPathDisplay alterPathDisplay;
+	private AircraftFeeder aircraftFeeder;
 	
 	public static void main(String[] args) {
 		CollisionAvoidanceSystem display = new CollisionAvoidanceSystem();
@@ -74,6 +75,7 @@ public class CollisionAvoidanceSystem extends JFrame {
         });  
 		contentpane.add(alterPathDisplay, gblConstraints);
 		
+		int n = 0;
 		while (true) {
 			try {
 				Thread.sleep(1000); // 1000 milliseconds is one second.
@@ -82,6 +84,10 @@ public class CollisionAvoidanceSystem extends JFrame {
 			}
 			system.fly();
 			updateDisplay();
+		//	if (n % 3 == 0)
+				system.addAircraft(aircraftFeeder.getAircraftToInject());
+			n++;
+			// System.out.println(_eSystem._lJavaString(system.getMinDist()));
 		}		
 	}
 	
@@ -98,11 +104,13 @@ public class CollisionAvoidanceSystem extends JFrame {
 
 	private void InitialiseCASystem(Dimension screenSize)
 	{
+		aircraftFeeder = new AircraftFeeder(screenSize.width, screenSize.height);
 		AirTrafficController initialATC = new AirTrafficController(
-				getInitialSeqOfAircrafts(screenSize.width, screenSize.height),
+				aircraftFeeder.getInitialSeqOfAircrafts(),
 				(Aircraft) null, 0.0, (double) (screenSize.width), 0.0,
 				(double) (screenSize.height));
 		system = new CASystem(initialATC);
+		aircraftFeeder.system = system;
 	}
 	
 	private GridBagLayout getGBLLayout()

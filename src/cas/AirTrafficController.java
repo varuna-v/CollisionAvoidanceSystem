@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/AirTrafficController.pd'
-//* by Perfect Developer version 6.10.01 at 17:34:08 UTC on Monday March 9th 2015
+//* by Perfect Developer version 6.10.01 at 12:35:30 UTC on Tuesday March 10th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etf8F71.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etf8562.tmp
 //***********************************************************************************************
 
 package cas;
@@ -500,6 +500,15 @@ public class AirTrafficController extends _eAny
         _lClassInvariantCheck ("AirTrafficController.pd:79,19");
     }
 
+    public void addAircraft (Aircraft aircraft)
+    {
+        _eSeq _vUnshare_90_14 = ((_eSeq) aircrafts._lClone ());
+        aircrafts = _vUnshare_90_14;
+        _vUnshare_90_14._iz_append (((_eAny) aircraft));
+        fly (0.0);
+        _lClassInvariantCheck ("AirTrafficController.pd:90,14");
+    }
+
     public AirTrafficController (_eSeq _vaircrafts, Aircraft _t0_vaircrafts, double _vminX, double
         _vmaxX, double _vminY, double _vmaxY)
     {
@@ -509,89 +518,89 @@ public class AirTrafficController extends _eAny
             _eSystem.currentCheckNesting ++;
             try
             {
-                boolean _vCondResult_88_13;
+                boolean _vCondResult_95_13;
                 if (((_vminX < _vmaxX) && (_vminY < _vmaxY)))
                 {
-                    boolean _vQuantifierResult_88_15;
+                    boolean _vQuantifierResult_95_15;
                     {
-                        _vQuantifierResult_88_15 = true;
-                        int _vCaptureCount_i_88_30 = _vaircrafts._oHash ();
-                        int _vLoopCounter_88_23 = 0;
+                        _vQuantifierResult_95_15 = true;
+                        int _vCaptureCount_i_95_30 = _vaircrafts._oHash ();
+                        int _vLoopCounter_95_23 = 0;
                         for (;;)
                         {
-                            if (((_vCaptureCount_i_88_30 <= _vLoopCounter_88_23) || (!
-                                _vQuantifierResult_88_15))) break;
-                            boolean _vQuantifierResult_88_43;
+                            if (((_vCaptureCount_i_95_30 <= _vLoopCounter_95_23) || (!
+                                _vQuantifierResult_95_15))) break;
+                            boolean _vQuantifierResult_95_43;
                             {
-                                _vQuantifierResult_88_43 = true;
-                                int _vCaptureCount_j_88_62 = _vaircrafts._oHash ();
-                                int _vLoopCounter_88_51 = (1 + _vLoopCounter_88_23);
+                                _vQuantifierResult_95_43 = true;
+                                int _vCaptureCount_j_95_62 = _vaircrafts._oHash ();
+                                int _vLoopCounter_95_51 = (1 + _vLoopCounter_95_23);
                                 for (;;)
                                 {
-                                    if (((_vCaptureCount_j_88_62 <= _vLoopCounter_88_51) || (!
-                                        _vQuantifierResult_88_43))) break;
-                                    _vQuantifierResult_88_43 = (!((Aircraft) _vaircrafts._oIndex (
-                                        _vLoopCounter_88_51))._lEqual (((Aircraft) _vaircrafts.
-                                        _oIndex (_vLoopCounter_88_23))));
-                                    if ((!_vQuantifierResult_88_43))
+                                    if (((_vCaptureCount_j_95_62 <= _vLoopCounter_95_51) || (!
+                                        _vQuantifierResult_95_43))) break;
+                                    _vQuantifierResult_95_43 = (!((Aircraft) _vaircrafts._oIndex (
+                                        _vLoopCounter_95_51))._lEqual (((Aircraft) _vaircrafts.
+                                        _oIndex (_vLoopCounter_95_23))));
+                                    if ((!_vQuantifierResult_95_43))
                                     {
                                     }
                                     else
                                     {
-                                        _vLoopCounter_88_51 = _eSystem._oSucc (_vLoopCounter_88_51);
+                                        _vLoopCounter_95_51 = _eSystem._oSucc (_vLoopCounter_95_51);
                                     }
                                 }
                             }
-                            _vQuantifierResult_88_15 = _vQuantifierResult_88_43;
-                            if ((!_vQuantifierResult_88_15))
+                            _vQuantifierResult_95_15 = _vQuantifierResult_95_43;
+                            if ((!_vQuantifierResult_95_15))
                             {
                             }
                             else
                             {
-                                _vLoopCounter_88_23 = _eSystem._oSucc (_vLoopCounter_88_23);
+                                _vLoopCounter_95_23 = _eSystem._oSucc (_vLoopCounter_95_23);
                             }
                         }
                     }
-                    _vCondResult_88_13 = _vQuantifierResult_88_15;
+                    _vCondResult_95_13 = _vQuantifierResult_95_15;
                 }
                 else
                 {
-                    _vCondResult_88_13 = false;
+                    _vCondResult_95_13 = false;
                 }
-                boolean _vCondResult_89_13;
-                if (_vCondResult_88_13)
+                boolean _vCondResult_96_13;
+                if (_vCondResult_95_13)
                 {
-                    boolean _vQuantifierResult_89_15;
+                    boolean _vQuantifierResult_96_15;
                     {
-                        _vQuantifierResult_89_15 = true;
-                        int _vCaptureCount_a_89_26 = _vaircrafts._oHash ();
-                        int _vLoopCounter_89_23 = 0;
+                        _vQuantifierResult_96_15 = true;
+                        int _vCaptureCount_a_96_26 = _vaircrafts._oHash ();
+                        int _vLoopCounter_96_23 = 0;
                         for (;;)
                         {
-                            if (((_vLoopCounter_89_23 == _vCaptureCount_a_89_26) || (!
-                                _vQuantifierResult_89_15))) break;
-                            _vQuantifierResult_89_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
-                                (_vLoopCounter_89_23)).position.x) && (((Aircraft) _vaircrafts.
-                                _oIndex (_vLoopCounter_89_23)).position.x <= _vmaxX)) && ((_vminY <=
-                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_89_23)).position.y)
-                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_89_23)).position.
+                            if (((_vLoopCounter_96_23 == _vCaptureCount_a_96_26) || (!
+                                _vQuantifierResult_96_15))) break;
+                            _vQuantifierResult_96_15 = (((_vminX <= ((Aircraft) _vaircrafts._oIndex
+                                (_vLoopCounter_96_23)).position.x) && (((Aircraft) _vaircrafts.
+                                _oIndex (_vLoopCounter_96_23)).position.x <= _vmaxX)) && ((_vminY <=
+                                ((Aircraft) _vaircrafts._oIndex (_vLoopCounter_96_23)).position.y)
+                                && (((Aircraft) _vaircrafts._oIndex (_vLoopCounter_96_23)).position.
                                 y <= _vmaxY)));
-                            if ((!_vQuantifierResult_89_15))
+                            if ((!_vQuantifierResult_96_15))
                             {
                             }
                             else
                             {
-                                _vLoopCounter_89_23 = _eSystem._oSucc (_vLoopCounter_89_23);
+                                _vLoopCounter_96_23 = _eSystem._oSucc (_vLoopCounter_96_23);
                             }
                         }
                     }
-                    _vCondResult_89_13 = _vQuantifierResult_89_15;
+                    _vCondResult_96_13 = _vQuantifierResult_96_15;
                 }
                 else
                 {
-                    _vCondResult_89_13 = false;
+                    _vCondResult_96_13 = false;
                 }
-                if (!(_vCondResult_89_13)) throw new _xPre ("AirTrafficController.pd:89,13");
+                if (!(_vCondResult_96_13)) throw new _xPre ("AirTrafficController.pd:96,13");
             }
             catch (_xCannotEvaluate _lException)
             {
@@ -604,7 +613,7 @@ public class AirTrafficController extends _eAny
         minY = _vminY;
         maxY = _vmaxY;
         fly (0.0);
-        _lc_AirTrafficController ("AirTrafficController.pd:90,14");
+        _lc_AirTrafficController ("AirTrafficController.pd:97,14");
     }
 
     public boolean _lEqual (AirTrafficController _vArg_10_9)

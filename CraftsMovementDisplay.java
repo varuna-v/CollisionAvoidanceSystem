@@ -60,7 +60,7 @@ public class CraftsMovementDisplay extends JPanel {
 			
 			//Draw id
 			String id = aircraft.identification.toString();
-			String sId = id.substring(4, id.length()-1);
+			String sId = id.substring(4, id.length()-1).replaceAll(",", "");
 			g2d.drawString(sId, x-1, y-1);
 			
 			//Draw boundary

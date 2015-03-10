@@ -30,7 +30,7 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
                     rret : FileError ;
                 count! - 1 ,
 				context!print(printStuff(system) ++ "\n----------------\n");
-				system!fly(5.0);
+				system!addAircraft(Aircraft {Vector{0.00 , 0.00, 344.00, VectorType Position}, Vector{364.00, 63.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G", AircraftModel Boeing777200});
                 context!readLine(line! , rret!) ;
 				system!changeCraftHeight("A", 1350.0);
                 if [line="X" | system.numberOfAirCrafts = 0] : count != 0;

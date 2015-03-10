@@ -8,27 +8,36 @@
 class QuadraticEquation ^=
 abstract
 	
-	var x2 : real;
-	var x : real;
-	var constant : real;
+	var a : real;
+	var b : real;
+	var c : real;
 	
 interface
 	
 	function getXForMinimumValue : real
-		pre x2 > 0.0
+		pre a > 0.0
 		^= (let derivative ^= differentiateWRTx;
-			((derivative.constant * -1.0) / derivative.x));			
+			((derivative.c * -1.0) / derivative.b));			
+	
+	function solve : real
+		^= (let toBeRoot ^= (b*b)-(4*a*c);
+			([toBeRoot < 0.0] : 100000.0,
+			[] : (let r1 ^= ((-1.0*a) + ((toBeRoot)^(0.5)))/(2*a);
+				  let r2 ^= ((-1.0*a) - ((toBeRoot)^(0.5)))/(2*a);
+				  ([r1 > 0.0 & r1 > r2]: r1,
+				   [r2 > 0.0 & r2 > r1] : r2,
+				   [] : 100000.0))));
 	
 	function differentiateWRTx : QuadraticEquation
-		^= QuadraticEquation{0.0, 2.0 * x2, x};
+		^= QuadraticEquation{0.0, 2.0 * a, b};
 	
 	operator +(other : QuadraticEquation) : QuadraticEquation
-		^= QuadraticEquation{x2 + other.x2, x + other.x, constant + other.constant};
+		^= QuadraticEquation{a + other.a, b + other.b, c + other.c};
 		
 	operator - (other : QuadraticEquation) : QuadraticEquation
-		^= QuadraticEquation{x2 - other.x2, x - other.x, constant - other.constant};
+		^= QuadraticEquation{a - other.a, b - other.b, c - other.c};
 	
-	build{!x2 : real, !x : real, !constant : real};
+	build{!a : real, !b : real, !c : real};
 	
 end;
 

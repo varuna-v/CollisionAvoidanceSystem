@@ -28,7 +28,13 @@ interface
 	
 	schema !fly
 		post atc!fly(defaultTimeToFlyFor);
+		
+	schema !addAircraft(aircraft : Aircraft)
+		post atc!addAircraft(aircraft);
 	
+//	function getMinDist : string
+	//	^= atc.getMinDist;
+		
 	build{!atc : AirTrafficController};
 	
 end;
