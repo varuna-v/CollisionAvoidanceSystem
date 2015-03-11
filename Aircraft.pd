@@ -20,7 +20,7 @@ abstract
 	var identification : string;
 	var conflictStatus : ConflictStatus;
 	var model : AircraftModel;
-	var isElevatingOrDescending : bool;
+	var isElevatingOrDescending : bool; //!!Use status instead
 	var targetHeight : real;
 	
 	invariant position.type = VectorType Position;
@@ -62,15 +62,16 @@ confined
 		//!!assert result >= 0.00;
 	
 	function getCosineOfAngleForClimb : real
-		^= ([model = AircraftModel Boeing777200 | model = AircraftModel Boeing777300] : 0.97, //cos 14.0,
-			[model = AircraftModel Boeing737300 | model = AircraftModel Boeing737400 | model = AircraftModel Boeing737500] : 0.96, //cos15.0
-			[model = AircraftModel Boeing717] : 0.95, //cos 17.0
-			[model = AircraftModel Boeing737600 | model = AircraftModel Boeing737900] : 0.96, //cos 15.5
-			[model = AircraftModel BoeingMD80] : 0.95, //cos 17.0
-			[model = AircraftModel Boeing747400] : 0.96, //cos15.0
-			[model = AircraftModel BoeingMD90] : 0.95, //cos 17.0
-			[model = AircraftModel Boeing757200 | model = AircraftModel Boeing767400] : 0.96, //cos15.0
-			[model = AircraftModel BoeingMD11] : 0.94); //cos 20.0
+		^= 0.5; //cos60
+		//!!([model = AircraftModel Boeing777200 | model = AircraftModel Boeing777300] : 0.97, //cos 14.0,
+			//[model = AircraftModel Boeing737300 | model = AircraftModel Boeing737400 | model = AircraftModel Boeing737500] : 0.96, //cos15.0
+			//[model = AircraftModel Boeing717] : 0.95, //cos 17.0
+			//[model = AircraftModel Boeing737600 | model = AircraftModel Boeing737900] : 0.96, //cos 15.5
+			//[model = AircraftModel BoeingMD80] : 0.95, //cos 17.0
+		//	[model = AircraftModel Boeing747400] : 0.96, //cos15.0
+		//	[model = AircraftModel BoeingMD90] : 0.95, //cos 17.0
+		//	[model = AircraftModel Boeing757200 | model = AircraftModel Boeing767400] : 0.96, //cos15.0
+		//	[model = AircraftModel BoeingMD11] : 0.94); //cos 20.0
 			
 	function getVelocityForAscentOrDescent(isAscent : bool) : Vector
 		^= (let cosOfAngle ^= ([isAscent] : getCosineOfAngleForClimb,

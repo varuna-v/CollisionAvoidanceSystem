@@ -86,7 +86,7 @@ public class CollisionAvoidanceSystem extends JFrame {
 			}
 			system.fly();
 			updateDisplay();
-			//if (n % 2 == 0)
+			if (n % 3 == 0)
 				injectAircraft();
 			n++;
 		}		

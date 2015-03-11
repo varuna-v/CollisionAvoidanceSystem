@@ -12,7 +12,8 @@ import Ertsys.*;
 public class AlterPathDisplay extends JPanel
 {
 	private List<Aircraft> _aircrafts;
-	private JComboBox cbxIdentities;
+	//private JComboBox cbxIdentities;
+	private JTextField txtIdentity;
 	private JTextField txtTargetHeight;
 	public JButton btnConfirm;
 	private JLabel lblError;
@@ -20,11 +21,13 @@ public class AlterPathDisplay extends JPanel
 	public AlterPathDisplay(List<Aircraft> aircrafts)
 	{
 		setLayout(new GridLayout(3, 2, 2, 2));
+		_aircrafts = aircrafts;
+		add(new JLabel("Identity: "));
 		
-		add(new JLabel("Identification: "));
-		
-		configureIdentitiesComboBox(aircrafts);
-		add(cbxIdentities);
+		//configureIdentitiesComboBox(aircrafts);
+		//add(cbxIdentities);
+		txtIdentity = new JTextField();
+		add(txtIdentity);
 		
 		add(new JLabel("Target altitude: "));
 		
@@ -36,19 +39,20 @@ public class AlterPathDisplay extends JPanel
 		
 		lblError = new JLabel();
 		lblError.setForeground(Color.RED);
+		add(lblError);
 		
 		setBorder(BorderFactory.createLoweredBevelBorder());
 	}	
 	
 	public void update(List<Aircraft> aircrafts)
 	{
-		configureIdentitiesComboBox(aircrafts);
+		_aircrafts = aircrafts;
 	}
 	
 	public AlterPathPair getDataToAlterPath(CASystem system)
 	{
 		String sTargetHeight = txtTargetHeight.getText();
-		if (sTargetHeight == "") 
+		if (sTargetHeight.equals("")) 
 		{
 			lblError.setText("Enter target height");
 			return null;
@@ -65,27 +69,57 @@ public class AlterPathDisplay extends JPanel
 			return null;
 		}
 
-		return new AlterPathPair(String.valueOf(cbxIdentities.getSelectedItem()), targetHeight);
+		String sIdentity = txtIdentity.getText();
+		if (sIdentity.equals(""))
+		{
+			lblError.setText("Enter aircraft identity");
+			return null;
+		}
+		
+		if (!doesAircraftWithIdentityExist(sIdentity))
+		{
+			lblError.setText("Enter valid aircraft identity");
+			return null;
+		}
+		
+		lblError.setText("");
+		
+		return new AlterPathPair(sIdentity, targetHeight);
 		
 	}
 	
-	private void configureIdentitiesComboBox(List<Aircraft> aircrafts)
+	private boolean doesAircraftWithIdentityExist(String identity)
 	{
-		if (cbxIdentities == null) { cbxIdentities = new JComboBox(); }
-		cbxIdentities.removeAllItems();
-		if (aircrafts != null) 
+		if (_aircrafts != null)
 		{
-			for(Aircraft aircraft : aircrafts)
-			{
-				String id = aircraft.identification.toString();
-				String sId = id.substring(4, id.length()-1).replaceAll(",", "");
-				cbxIdentities.addItem(sId);
-			}
-			cbxIdentities.setEnabled(true);
+			for (Aircraft aircraft : _aircrafts)
+				if (_eSystem._lJavaString(aircraft.identification).equals(identity))
+					return true;
 		}
-		else
-		{
-			cbxIdentities.setEnabled(false);
-		}
+		return false;
 	}
+	
+//	private void configureIdentitiesComboBox(List<Aircraft> aircrafts)
+//	{
+//		if (cbxIdentities == null) { cbxIdentities = new JComboBox(); }
+//		
+//		if (aircrafts != null) 
+//		{
+//			DefaultComboBoxModel model = (DefaultComboBoxModel)cbxIdentities.getModel(); 
+//			for(Aircraft aircraft : aircrafts)
+//			{
+//				String id = aircraft.identification.toString();
+//				String sId = id.substring(4, id.length()-1).replaceAll(",", "");
+//				if (model.getIndexOf(sId) == -1)
+//					cbxIdentities.addItem(sId);
+//			}
+//			
+//			cbxIdentities.setEnabled(true);
+//		}
+//		else
+//		{
+//			cbxIdentities.removeAllItems();
+//			cbxIdentities.setEnabled(false);
+//		}
+//	}
 }
