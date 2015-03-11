@@ -33,11 +33,11 @@ confined
 		^= breaksMinimumVerticalSeparation(other) & (getMinimum2DDistanceBetweenPaths(other) <= getBiggerRadius(other));
 		     
 	function getMinimum2DDistanceBetweenPaths(other : Aircraft) : real
-		^= (let tForMinD ^= getTimeToMinimum2DDistanceBetweenPaths(other);
+		^= (let tForMinD ^= getTimeToMinimumDistanceBetweenPaths(other);
 			([tForMinD < 0.0] : 100000.00, //any large number
-			 [] : positionAfterFlying(tForMinD).getDistanceFrom(other.positionAfterFlying(tForMinD))));
+			 [] : positionAfterFlying(tForMinD).getTwoDimensionalDistanceFrom(other.positionAfterFlying(tForMinD))));
 			 
-	function getTimeToMinimum2DDistanceBetweenPaths(other : Aircraft) : real
+	function getTimeToMinimumDistanceBetweenPaths(other : Aircraft) : real
 		^= (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
 		   magSquare.getXForMinimumValue);
 	
@@ -45,7 +45,7 @@ confined
 		^= (let q1 ^= VectorWithVariables{position.x, position.y, position.z, velocity.x, velocity.y, velocity.z};
 		   let q2 ^= VectorWithVariables{other.position.x, other.position.y, other.position.z, other.velocity.x, other.velocity.y, other.velocity.z};
 		   let q21 ^= q2 - q1;
-		   q21.squareOfMagnitude);
+		   q21.squareOf2DMagnitude);
 		   
 	function getBiggerRadius(other : Aircraft) : real
 		^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
@@ -53,7 +53,7 @@ confined
 	
 	function isInConflictWith(other : Aircraft) : bool
 		^= breaksMinimumVerticalSeparation(other) & 
-		   (position.getDistanceFrom(other.position) <= getBiggerRadius(other));
+		   (position.getTwoDimensionalDistanceFrom(other.position) <= getBiggerRadius(other));
 			
 	function timeToCollision(other : Aircraft) : real
 		pre ~isInConflictWith(other) & other.velocity ~= velocity

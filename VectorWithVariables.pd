@@ -16,10 +16,10 @@ abstract
 	
 interface
 	
-	function squareOfMagnitude : QuadraticEquation
-		^= QuadraticEquation{((xt ^ 2) + (yt ^ 2) + (zt ^2)), 
-							 ((2 * xt * xconst) + (2 * yt * yconst) + (2 * zt * zconst)),
-							 ((xconst ^ 2) + (yconst ^ 2)+ (zconst ^ 2))};
+	function squareOf2DMagnitude : QuadraticEquation
+		^= QuadraticEquation{((xt ^ 2) + (yt ^ 2)),// + (zt ^2)), 
+							 ((2 * xt * xconst) + (2 * yt * yconst)),// + (2 * zt * zconst)),
+							 ((xconst ^ 2) + (yconst ^ 2))};//+ (zconst ^ 2))};
 	
 	operator +(other : VectorWithVariables) : VectorWithVariables
 		^= VectorWithVariables{xconst + other.xconst, yconst + other.yconst, zconst + other.zconst,

@@ -25,10 +25,10 @@ interface
 	function magnitude : real
 		^= ((x^2 + y^2 + z^2)^(0.5));
 	
-	//function getTwoDimensionalDistanceFrom(other : Vector) : real
-		//pre type = VectorType Position & other.type = VectorType Position
-		//^= ([x=other.x & y=other.y] : 0.0, //!!
-			//[] :(((x-other.x)^2) + ((y-other.y)^2)) ^ (0.5));
+	function getTwoDimensionalDistanceFrom(other : Vector) : real
+		pre type = VectorType Position & other.type = VectorType Position
+		^= ([x=other.x & y=other.y] : 0.0,
+			[] :(((x-other.x)^2) + ((y-other.y)^2)) ^ (0.5));
 	
 	function getDistanceFrom(other : Vector)  : real
 		pre type = VectorType Position & other.type = VectorType Position

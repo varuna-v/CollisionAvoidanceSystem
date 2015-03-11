@@ -3,9 +3,9 @@
 //* THIS IS A GENERATED FILE: DO NOT EDIT. Please edit the Perfect Developer source file instead!
 //*
 //* Generated from: 'C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/Aircraft.pd'
-//* by Perfect Developer version 6.10.01 at 15:08:28 UTC on Wednesday March 11th 2015
+//* by Perfect Developer version 6.10.01 at 18:04:07 UTC on Wednesday March 11th 2015
 //* Using command line options:
-//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfEDEA.tmp
+//* -z1 -el=3 -em=100 -gl=Java -gp=C:/Users/User/Desktop/Third Year Project/CollisionAvoidanceSystem/src/cas -gs=1 -gv=ISO -gw=100 -gdp=1 -gdo=0 -gdc=3 -gda=1 -gdA=0 -gdl=0 -gdr=0 -gdt=0 -gdi=1 -st=4 -sb=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/builtin.pd -sr=C:/Program Files/Escher Technologies/Verification Studio 6/Bin/rubric.pd -q=0 -gk=cas -eM=0 -@=C:/Users/User/AppData/Local/Temp/etfBB32.tmp
 //***********************************************************************************************
 
 package cas;
@@ -87,13 +87,13 @@ public class Aircraft extends _eAny
 
     protected double getMinimum2DDistanceBetweenPaths (Aircraft other)
     {
-        double _vLet_tForMinD_36_17 = getTimeToMinimum2DDistanceBetweenPaths (other);
+        double _vLet_tForMinD_36_17 = getTimeToMinimumDistanceBetweenPaths (other);
         return ((_vLet_tForMinD_36_17 < 0.0) ?
-        100000.0 : positionAfterFlying (_vLet_tForMinD_36_17).getDistanceFrom (other.
+        100000.0 : positionAfterFlying (_vLet_tForMinD_36_17).getTwoDimensionalDistanceFrom (other.
             positionAfterFlying (_vLet_tForMinD_36_17)));
     }
 
-    protected double getTimeToMinimum2DDistanceBetweenPaths (Aircraft other)
+    protected double getTimeToMinimumDistanceBetweenPaths (Aircraft other)
     {
         QuadraticEquation _vLet_magSquare_41_17 = getSquareOfMagnitudeOfPostionOfOtherWRTThis (other)
             ;
@@ -107,7 +107,7 @@ public class Aircraft extends _eAny
         VectorWithVariables _vLet_q2_46_16 = new VectorWithVariables (other.position.x, other.
             position.y, other.position.z, other.velocity.x, other.velocity.y, other.velocity.z);
         VectorWithVariables _vLet_q21_47_16 = _vLet_q2_46_16._oMinus (_vLet_q1_45_17);
-        return _vLet_q21_47_16.squareOfMagnitude ();
+        return _vLet_q21_47_16.squareOf2DMagnitude ();
     }
 
     protected double getBiggerRadius (Aircraft other)
@@ -118,8 +118,8 @@ public class Aircraft extends _eAny
 
     protected boolean isInConflictWith (Aircraft other)
     {
-        return (breaksMinimumVerticalSeparation (other) && (position.getDistanceFrom (other.position)
-            <= getBiggerRadius (other)));
+        return (breaksMinimumVerticalSeparation (other) && (position.getTwoDimensionalDistanceFrom (
+            other.position) <= getBiggerRadius (other)));
     }
 
     protected double timeToCollision (Aircraft other)
