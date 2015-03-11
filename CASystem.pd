@@ -17,9 +17,6 @@ interface
 	function getAircrafts : seq of Aircraft
 		^= atc.aircrafts;
 	
-	function getMinimumTimeToConflict : string
-		^= atc.getMinimumTimeToConflict;
-	
 	function getAircraftPairsOrderedByTimeToConflict : seq of AircraftPair
 		^= atc.getAircraftPairsOrderedByTimeToConflict;
 	
@@ -31,9 +28,6 @@ interface
 		
 	schema !addAircraft(aircraft : Aircraft)
 		post atc!addAircraft(aircraft);
-	
-//	function getMinDist : string
-	//	^= atc.getMinDist;
 		
 	build{!atc : AirTrafficController};
 	

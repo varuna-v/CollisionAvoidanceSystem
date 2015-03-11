@@ -24,21 +24,17 @@ public class CollisionAvoidanceSystem extends JFrame {
 	private FlightsDetailsDisplay flightsDetailsDisplay;
 	private ConflictsDetailsDisplay cdsDisplay;
 	private AlterPathDisplay alterPathDisplay;
-	private AircraftFeeder aircraftFeeder;
+	private IAircraftFeeder aircraftFeeder;
 	
 	public static void main(String[] args) {
-		CollisionAvoidanceSystem display = new CollisionAvoidanceSystem();
-	}
-
-	private void doTheTest()
-	{
+		String feederIdentification = (args == null || args.length == 0) ? "" : args[0];
+		CollisionAvoidanceSystem display = new CollisionAvoidanceSystem(feederIdentification);
 	}
 	
-	public CollisionAvoidanceSystem() {
+	public CollisionAvoidanceSystem(String feederIdentification) {
   
-		doTheTest();
-		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		InitialiseAircraftFeeder(feederIdentification, screenSize);
 		InitialiseCASystem(screenSize);
 		SetFrameProperties(screenSize);
 		contentpane = getContentPane();
@@ -78,7 +74,7 @@ public class CollisionAvoidanceSystem extends JFrame {
         			updateDisplay();
         		}
             }
-        });  
+        });
 		contentpane.add(alterPathDisplay, gblConstraints);
 		
 		int n = 0;
@@ -90,11 +86,17 @@ public class CollisionAvoidanceSystem extends JFrame {
 			}
 			system.fly();
 			updateDisplay();
-		//	if (n % 3 == 0)
-				system.addAircraft(aircraftFeeder.getAircraftToInject());
+			//if (n % 2 == 0)
+				injectAircraft();
 			n++;
-			// System.out.println(_eSystem._lJavaString(system.getMinDist()));
 		}		
+	}
+	
+	private void injectAircraft()
+	{
+		Aircraft craftToInject = aircraftFeeder.getAircraftToInject();
+		if (craftToInject != null)
+			system.addAircraft(craftToInject);		
 	}
 	
 	private void updateDisplay()
@@ -110,13 +112,17 @@ public class CollisionAvoidanceSystem extends JFrame {
 
 	private void InitialiseCASystem(Dimension screenSize)
 	{
-		aircraftFeeder = new AircraftFeeder(screenSize.width, screenSize.height);
 		AirTrafficController initialATC = new AirTrafficController(
 				aircraftFeeder.getInitialSeqOfAircrafts(),
 				(Aircraft) null, 0.0, (double) (screenSize.width), 0.0,
 				(double) (screenSize.height));
 		system = new CASystem(initialATC);
-		aircraftFeeder.system = system;
+		//aircraftFeeder.system = system;
+	}
+	
+	private void InitialiseAircraftFeeder(String feederIdentification, Dimension screenSize)
+	{
+		aircraftFeeder = AircraftFeederFactory.getAircraftFeeder(feederIdentification, screenSize);			
 	}
 	
 	private GridBagLayout getGBLLayout()

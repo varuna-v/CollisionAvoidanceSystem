@@ -35,13 +35,7 @@ interface
 		^=	"Craft 1 <br>" ++ craft1.toString ++ "<br> Craft 2 <br>" ++ craft2.toString; 
 	
 	operator ~~ (other)
-		^= ([getConflictStatus = ConflictStatus Conflicted & other.getConflictStatus = ConflictStatus Conflicted] : rank same,
-			[getConflictStatus = ConflictStatus Conflicted] : rank above,
-			[other.getConflictStatus = ConflictStatus Conflicted ] : rank below,
-			[~breaksMinimumVerticalSeparation & ~other.breaksMinimumVerticalSeparation] : rank same,
-			[~breaksMinimumVerticalSeparation] : rank below,
-			[other.breaksMinimumVerticalSeparation] : rank above,
-			[] : timeToConflict ~~ other.timeToConflict);
+		^= timeToConflict ~~ other.timeToConflict;
 			
 	
 	build{!craft1 : Aircraft, !craft2 : Aircraft}

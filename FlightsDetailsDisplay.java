@@ -9,11 +9,11 @@ import Ertsys.*;
 public class FlightsDetailsDisplay extends JPanel
 {	
 	private List<FlightDetailsDisplay> _flightsDisplay = new ArrayList<FlightDetailsDisplay>(); 
-	private static final int numberOfPanels = 7;
+	//private static final int numberOfPanels = 7;
 	
 	public FlightsDetailsDisplay(List<Aircraft> aircrafts)
 	{
-		setLayout(new GridLayout(numberOfPanels, 1));
+		setLayout(new GridLayout(0, 1));
 		addDisplays(aircrafts);
 	}
 	
@@ -37,11 +37,13 @@ public class FlightsDetailsDisplay extends JPanel
 		if (aircrafts != null)
 		{
 			int i;
-			for (i = 0; i < aircrafts.size() && i < numberOfPanels; i++) 
+			for (i = 0; i < aircrafts.size(); i++) 
 			{
 				FlightDetailsDisplay fdd = new FlightDetailsDisplay(aircrafts.get(i));
-				this.add(fdd);
+				fdd.setMinimumSize(new Dimension(200, 30));
+				//fdd.setMaximumSize(new Dimension(80, 30));
 				_flightsDisplay.add(fdd);
+				this.add(fdd);
 			}				
 		}
 	}

@@ -30,8 +30,8 @@ abstract
 confined
 	
 	function futureConflict(other : Aircraft) : bool
-		^= breaksMinimumVerticalSeparation(other) & (getMinimum2DDistanceBetweenPaths(other) <= (getBiggerRadius(other) / 1.4));
-	   
+		^= breaksMinimumVerticalSeparation(other) & (getMinimum2DDistanceBetweenPaths(other) <= getBiggerRadius(other));
+		     
 	function getMinimum2DDistanceBetweenPaths(other : Aircraft) : real
 		^= (let tForMinD ^= getTimeToMinimum2DDistanceBetweenPaths(other);
 			([tForMinD < 0.0] : 100000.00, //any large number
@@ -40,20 +40,20 @@ confined
 	function getTimeToMinimum2DDistanceBetweenPaths(other : Aircraft) : real
 		^= (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
 		   magSquare.getXForMinimumValue);
-		   
+	
 	function getSquareOfMagnitudeOfPostionOfOtherWRTThis(other : Aircraft) : QuadraticEquation
-		^= (let q1 ^= VectorWithVariables{position.x, position.y, velocity.x, velocity.y};
-		   let q2 ^= VectorWithVariables{other.position.x, other.position.y, other.velocity.x, other.velocity.y};
+		^= (let q1 ^= VectorWithVariables{position.x, position.y, position.z, velocity.x, velocity.y, velocity.z};
+		   let q2 ^= VectorWithVariables{other.position.x, other.position.y, other.position.z, other.velocity.x, other.velocity.y, other.velocity.z};
 		   let q21 ^= q2 - q1;
 		   q21.squareOfMagnitude);
-	
+		   
 	function getBiggerRadius(other : Aircraft) : real
 		^= ([boundaryRadius > other.boundaryRadius] : boundaryRadius,
 			[] : other.boundaryRadius);
 	
 	function isInConflictWith(other : Aircraft) : bool
-		^= breaksMinimumVerticalSeparation(other) & (let biggerRadius ^= getBiggerRadius(other);
-			position.getTwoDimensionalDistanceFrom(other.position) <= biggerRadius);
+		^= breaksMinimumVerticalSeparation(other) & 
+		   (position.getDistanceFrom(other.position) <= getBiggerRadius(other));
 			
 	function timeToCollision(other : Aircraft) : real
 		pre ~isInConflictWith(other) & other.velocity ~= velocity
@@ -99,7 +99,7 @@ confined
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity;
 			
 interface	
-		   
+	
 	function conflictStatus;
 	
 	function position;
@@ -116,13 +116,13 @@ interface
 	function breaksMinimumVerticalSeparation(other : Aircraft) : bool
 		^= (let heightDifference ^= ([other.position.z > position.z] : other.position.z - position.z,
 									 [] : position.z - other.position.z);
-			([position.y <= verticalBreakPoint & other.position.y <= verticalBreakPoint] : heightDifference < 300.00, //meters
+			([position.z <= verticalBreakPoint & other.position.z <= verticalBreakPoint] : heightDifference < 300.00, //meters
 			[] : heightDifference < 600.00)); //meters
 	
 	function getConflictStatus(other : Aircraft) : ConflictStatus
 		^= ([~breaksMinimumVerticalSeparation(other)] : ConflictStatus NoConflict,
 			[isInConflictWith(other)] : ConflictStatus Conflicted,
-			[other.velocity ~= velocity & futureConflict(other)] : ConflictStatus PotentialFutureConflict,
+			[futureConflict(other)] : ConflictStatus PotentialFutureConflict,
 			[] : ConflictStatus NoConflict);
 		 //assert result = other.getConflictStatus(self);
 		 
@@ -138,6 +138,17 @@ interface
 										 Aircraft {newPos, newVelocity, false, 0.0, boundaryRadius, status, identification, model}),
 			[] : Aircraft {posAfterStraightFlight, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, model}));
 	
+	//schema !fly(time : real)
+		//post (let posAfterStraightFlight ^= positionAfterFlying(time);
+			//([hasCrossedTargetHeight(posAfterStraightFlight)] : (let timeToTarget ^= getTimeToTargetHeight; //!!assert timeToTarget < time
+				//						 let posAtTarget ^= positionAfterFlying(timeToTarget);
+					//					 velocity != Vector{velocity.x, velocity.y, VectorType Velocity},
+						//				 position != getPositionAfterStraightFlight(time - timeToTarget, velocity, posAtTarget),
+							//			 isElevatingOrDescending != false,
+								//		 targetHeight != 0.0),
+			//[] : position != posAfterStraightFlight));
+	
+	
 	function timeToConflict(other : Aircraft) : real
 		^= ([~futureConflict(other)] : 100000.00, //any large number
 			[] : (let magSquare ^= getSquareOfMagnitudeOfPostionOfOtherWRTThis(other);
@@ -147,16 +158,19 @@ interface
 	redefine function toString : string
 		^= "\n Id:" ++ identification ++ "\n Position: " ++ position.toString ++ "\n Velocity: " ++ velocity.toString ++ "\n Conflict Status: " ++ conflictStatus.toString ++ "\n" ++ boundaryRadius.toString;
 	
-	//operator =(other : Aircraft) : bool
-		//^= identification = other.identification;
-	
 	function getCraftWithConflictStatus(cs : ConflictStatus) : Aircraft
 		^= Aircraft{position, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, cs, model};
 	
 	function getCraftTargettingHeight(heightToTarget : real) : Aircraft
 		^= ([heightToTarget = position.z] : Aircraft{position, velocity, isElevatingOrDescending, targetHeight, boundaryRadius, status, identification, model},
 			[] : Aircraft{position, getVelocityForAscentOrDescent(heightToTarget > position.z), true, heightToTarget, boundaryRadius, status, identification, model});
+	
+	//operator =(other : Aircraft) : bool
+		//^= identification = other.identification;
 			
+	//operator ~~ (other)
+		//^= identification ~~ other.identification;
+		
 	build{!position : Vector, !velocity : Vector, !boundaryRadius : real, !status : AircraftStatus, !identification : string, !model : AircraftModel}
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity & ~identification.empty
 		post conflictStatus != ConflictStatus NoConflict,

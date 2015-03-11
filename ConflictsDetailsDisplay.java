@@ -11,16 +11,16 @@ public class ConflictsDetailsDisplay extends JPanel
 {
 	private CASystem _system;
 	private JLabel _JLMinTimeToConflict = new JLabel();
-	private JLabel _JLCriticalPairs[] = new JLabel[10];
+	private static final int _numberOfJLCriticalPairs = 10;
+	private JLabel _JLCriticalPairs[] = new JLabel[_numberOfJLCriticalPairs];
 	
 	public ConflictsDetailsDisplay(CASystem casystem)
 	{
 		_system = casystem;
-	    setLayout(new GridLayout(0, 2, 20, 10));
-	    this.add(new JLabel("Time to next possible conflict: "));
-	    this.add(_JLMinTimeToConflict);
-	    
-	    for (int i = 0; i < 10; i++)
+	    setLayout(new GridLayout(6, 2));
+	    this.add(new JLabel("                         Aircrafts"));
+	    this.add(new JLabel("Time to conflict"));
+	    for (int i = 0; i < _numberOfJLCriticalPairs; i++)
 	    {
 	    	_JLCriticalPairs[i] = new JLabel();
 	    	_JLCriticalPairs[i].setMinimumSize(new Dimension(60, 20));
@@ -36,19 +36,20 @@ public class ConflictsDetailsDisplay extends JPanel
 	
 	private void updateDetails()
 	{
-		_JLMinTimeToConflict.setText(_eSystem._lJavaString(_system.getMinimumTimeToConflict()));
-		
+		_JLMinTimeToConflict.setText("");
 		AircraftPair criticalPairs[] = getCriticalPairs();
-		
+
+		int labelCount = 0;
 		if (criticalPairs != null)
 		{
-			int labelCount = 0;
 			for (int i = 0; i < criticalPairs.length && labelCount + 1 < _JLCriticalPairs.length; i++)
 			{
-				_JLCriticalPairs[labelCount++].setText(_eSystem._lJavaString(criticalPairs[i].craft1.identification));
-				_JLCriticalPairs[labelCount++].setText(_eSystem._lJavaString(criticalPairs[i].craft2.identification));
+				_JLCriticalPairs[labelCount++].setText("    " + _eSystem._lJavaString(criticalPairs[i].craft1.identification) + " & " + _eSystem._lJavaString(criticalPairs[i].craft2.identification));
+				_JLCriticalPairs[labelCount++].setText(String.valueOf(criticalPairs[i].timeToConflict()));
 			}
 		}
+		for (; labelCount < _numberOfJLCriticalPairs; labelCount++)
+			_JLCriticalPairs[labelCount].setText("");
 	}
 	
 	private AircraftPair[] getCriticalPairs() {

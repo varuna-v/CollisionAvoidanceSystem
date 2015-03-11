@@ -47,22 +47,18 @@ confined
 		assert (forall a::aircrafts' :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY) &
 			   (forall i::0..<#aircrafts' :-(forall j::(i+1)..<#aircrafts' :- aircrafts'[i] ~= aircrafts'[j]));
 	
+	function getPairsThatArePFC : set of AircraftPair
+		^= (let pairs ^= getPairs;
+			those p::pairs :- p.getConflictStatus = ConflictStatus PotentialFutureConflict);//(p.timeToConflict > 0.0 & p.timeToConflict ~= 100000.00));
 interface
 	
 	function aircrafts;
 	
 	function numberOfAirCrafts : nat
 		^= #aircrafts;
-	
-	function getMinimumTimeToConflict : string
-		^= (let pairs ^= getPairs;
-			([#pairs > 0 &(exists p::pairs :- p.getConflictStatus = ConflictStatus Conflicted)] : "0",
-			[] : (let timesToConsider ^= (for those p::pairs :- p.breaksMinimumVerticalSeparation yield p.timeToConflict);
-				  ([#timesToConsider > 0 & timesToConsider.min ~= 100000.00] : timesToConsider.min.toString,
-				   [] : "infinite"))));
 
 	function getAircraftPairsOrderedByTimeToConflict : seq of AircraftPair
-		^= getPairs.opermndec;
+		^= getPairsThatArePFC.opermndec;
 
 	function getConflictStatus(aircraft : Aircraft, incconflicts : map of (AircraftPair -> ConflictStatus)) : ConflictStatus
 		^= (let lst ^= (for those c::incconflicts.pairs :- c.x.craft1 = aircraft | c.x.craft2 = aircraft yield c.y);
@@ -96,9 +92,6 @@ interface
 			& (forall a::aircrafts :- minX <= a.position.x <= maxX & minY <= a.position.y <= maxY)
 		post !fly(0.0);
 		
-	//!!test remove
-	//function getMinDist : string
-	//	^= aircrafts[0].toString ++ "\n" ++ aircrafts[1].toString ++ "\n" ++ aircrafts[0].getMinimum2DDistanceBetweenPaths(aircrafts[1]).toString ++ "\n" ++ aircrafts[0].getTimeToMinimum2DDistanceBetweenPaths(aircrafts[1]).toString;
 end;
 
 

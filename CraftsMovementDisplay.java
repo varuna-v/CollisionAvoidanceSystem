@@ -45,9 +45,7 @@ public class CraftsMovementDisplay extends JPanel {
 			if (aircraft.conflictStatus == ConflictStatus.Conflicted)  
 			    g2d.setColor(Color.red);
 			else if(aircraft.conflictStatus == ConflictStatus.PotentialFutureConflict)
-			{   g2d.setColor(Color.yellow);
-				//System.out.println(sId);//!!
-			}
+			    g2d.setColor(Color.yellow);
 			else 
 			    g2d.setColor(Color.green);
 			

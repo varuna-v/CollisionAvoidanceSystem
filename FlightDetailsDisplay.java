@@ -30,15 +30,15 @@ public class FlightDetailsDisplay extends JPanel
 	
 	private void setInitialLabels()
 	{
-		_labels[2].setText("Position: ");
-		_labels[4].setText("Velocity: ");
+		_labels[2].setText("    Position: ");
+		_labels[4].setText("    Velocity: ");
 	}
 	
 	private void setVariableLabels()
 	{
 		if (_aircraft != null)
 		{
-			_labels[0].setText(_eSystem._lJavaString(_aircraft.identification));
+			_labels[0].setText("    " + _eSystem._lJavaString(_aircraft.identification));
 			_labels[3].setText(_eSystem._lJavaString(_aircraft.position._rtoString()));
 			_labels[5].setText(_eSystem._lJavaString(_aircraft.velocity._rtoString()));
 		}
