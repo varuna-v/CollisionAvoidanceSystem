@@ -24,8 +24,8 @@ interface
 			([toBeRoot < 0.0] : 100000.0,
 			[] : (let r1 ^= ((-1.0*b) + ((toBeRoot)^(0.5)))/(2*a);
 				  let r2 ^= ((-1.0*b) - ((toBeRoot)^(0.5)))/(2*a);
-				  ([r1 > 0.0 & r1 >= r2]: r1,
-				   [r2 > 0.0 & r2 > r1] : r2,
+				  ([r1 > 0.0 & r1 <= r2]: r1,
+				   [r2 > 0.0 & r2 < r1] : r2,
 				   [] : 100000.0))));
 	
 	function differentiateWRTx : QuadraticEquation

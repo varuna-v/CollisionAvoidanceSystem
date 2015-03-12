@@ -55,7 +55,7 @@ public class TestAircraftFeederVaryingAltitudes implements IAircraftFeeder
 					_eSystem._lString("F"), (char) 0, AircraftModel.Boeing777200, (
 					AircraftModel) null)),
 			((_eAny) new Aircraft(new Vector(150.0,
-					500.0, 20800.0, VectorType.Position,
+					500.0, 21000.0, VectorType.Position,
 					(VectorType) null), new Vector(60.0, -60.0, 0.0,
 					VectorType.Velocity, (VectorType) null), 50.0,
 					AircraftStatus.FlyingAtLevel, (AircraftStatus) null,

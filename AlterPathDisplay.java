@@ -68,6 +68,18 @@ public class AlterPathDisplay extends JPanel
 			lblError.setText("Target height must be a real number");
 			return null;
 		}
+		
+		if (targetHeight > 30000.0)
+		{
+			lblError.setText("Target height is too high");
+			return null;
+		}
+		
+		if (targetHeight < 0.0)
+		{
+			lblError.setText("Target height is too low");
+			return null;
+		}
 
 		String sIdentity = txtIdentity.getText();
 		if (sIdentity.equals(""))

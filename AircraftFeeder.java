@@ -77,12 +77,10 @@ public class AircraftFeeder implements IAircraftFeeder
 	private static int _identifierCounter = 9;
 	private String getIdentifier()
 	{
-		//int num = 64 + _identifierCounter; //65n + k
+		//!!Is there a limit before repetition?
 		String identifier = "";
-		
 		int n = _identifierCounter / 26;
-		for (int i = 1; i <= n; i++)
-			identifier += "A";
+		identifier += String.valueOf((char)(65 + n));
 		int k = _identifierCounter % 26;
 		identifier += String.valueOf((char)(65 + k));
 		_identifierCounter++;
