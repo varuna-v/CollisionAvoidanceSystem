@@ -40,7 +40,7 @@ public class FlightsDetailsDisplay extends JPanel
 			for (i = 0; i < aircrafts.size(); i++) 
 			{
 				FlightDetailsDisplay fdd = new FlightDetailsDisplay(aircrafts.get(i));
-				fdd.setMinimumSize(new Dimension(200, 30));
+				fdd.setMinimumSize(new Dimension(350, 30));
 				//fdd.setMaximumSize(new Dimension(80, 30));
 				_flightsDisplay.add(fdd);
 				this.add(fdd);

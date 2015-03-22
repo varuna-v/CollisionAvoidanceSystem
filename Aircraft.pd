@@ -91,7 +91,7 @@ confined
 		
 	function getTimeToTargetHeight : real
 		^= (targetHeight - position.z) / velocity.z;
-	
+			
 	build{!position : Vector, !velocity : Vector, !isElevatingOrDescending : bool, !targetHeight : real, !boundaryRadius : real, !status : AircraftStatus, !identification : string, !model : AircraftModel}
 		pre  position.type = VectorType Position & velocity.type = VectorType Velocity
 		post conflictStatus != ConflictStatus NoConflict;
@@ -113,12 +113,17 @@ interface
 	
 	function speed : real
 		^= velocity.magnitude;
+	
+	function getMinimumVerticalSeparation(other : Aircraft) : real
+		^= ([position.z <= verticalBreakPoint & other.position.z <= verticalBreakPoint] : 300.00, //meters
+			[] : 600.00); //meters
+			
+	function getHeightDifference(other : Aircraft) : real
+		^= ([other.position.z > position.z] : other.position.z - position.z,
+									 [] : position.z - other.position.z);
 		
 	function breaksMinimumVerticalSeparation(other : Aircraft) : bool
-		^= (let heightDifference ^= ([other.position.z > position.z] : other.position.z - position.z,
-									 [] : position.z - other.position.z);
-			([position.z <= verticalBreakPoint & other.position.z <= verticalBreakPoint] : heightDifference < 300.00, //meters
-			[] : heightDifference < 600.00)); //meters
+		^= getHeightDifference(other) < getMinimumVerticalSeparation(other); //meters
 	
 	function getConflictStatus(other : Aircraft) : ConflictStatus
 		^= ([~breaksMinimumVerticalSeparation(other)] : ConflictStatus NoConflict,

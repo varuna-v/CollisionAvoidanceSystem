@@ -11,15 +11,16 @@ public class ConflictsDetailsDisplay extends JPanel
 {
 	private CASystem _system;
 	private JLabel _JLMinTimeToConflict = new JLabel();
-	private static final int _numberOfJLCriticalPairs = 10;
+	private static final int _numberOfJLCriticalPairs = 15;
 	private JLabel _JLCriticalPairs[] = new JLabel[_numberOfJLCriticalPairs];
 	
 	public ConflictsDetailsDisplay(CASystem casystem)
 	{
 		_system = casystem;
-	    setLayout(new GridLayout(6, 2));
+	    setLayout(new GridLayout(6, 3));
 	    this.add(new JLabel("                         Aircrafts"));
 	    this.add(new JLabel("Time to conflict"));
+	    this.add(new JLabel("Resolution"));
 	    for (int i = 0; i < _numberOfJLCriticalPairs; i++)
 	    {
 	    	_JLCriticalPairs[i] = new JLabel();
@@ -46,6 +47,7 @@ public class ConflictsDetailsDisplay extends JPanel
 			{
 				_JLCriticalPairs[labelCount++].setText("    " + _eSystem._lJavaString(criticalPairs[i].craft1.identification) + " & " + _eSystem._lJavaString(criticalPairs[i].craft2.identification));
 				_JLCriticalPairs[labelCount++].setText(String.valueOf(criticalPairs[i].timeToConflict()*10.0));
+				_JLCriticalPairs[labelCount++].setText(_eSystem._lJavaString(criticalPairs[i].getMovementToPreventConflict()));
 			}
 		}
 		for (; labelCount < _numberOfJLCriticalPairs; labelCount++)
