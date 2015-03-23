@@ -53,7 +53,6 @@ public class CollisionAvoidanceSystem extends JFrame {
 		gblConstraints.gridx = 1;
 		gblConstraints.gridy = 0;
 		flightsDetailsDisplay = new FlightsDetailsDisplay(aircrafts);
-		//new JScrollPane(flightsDetailsDisplay, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 		contentpane.add(flightsDetailsDisplay, gblConstraints);
 		
 		gblConstraints.gridx = 0;
@@ -86,7 +85,7 @@ public class CollisionAvoidanceSystem extends JFrame {
 			}
 			system.fly();
 			updateDisplay();
-			//if (n % 2 == 0)
+			if (n % 2 == 0)
 				injectAircraft();
 			n++;
 		}		
@@ -102,7 +101,6 @@ public class CollisionAvoidanceSystem extends JFrame {
 	private void updateDisplay()
 	{
 		ArrayList<Aircraft> aircrafts =  retrieveAircrafts();
-		//!!Create IUpdateable?? maybe set it up to react to system's aircrafts changing or system changing?
 		movementDisplay.updateAircrafts(aircrafts);
 		cdsDisplay.updateSystem(system);
 		flightsDetailsDisplay.update(aircrafts);
@@ -117,7 +115,6 @@ public class CollisionAvoidanceSystem extends JFrame {
 				(Aircraft) null, 0.0, (double) (screenSize.width), 0.0,
 				(double) (screenSize.height));
 		system = new CASystem(initialATC);
-		//aircraftFeeder.system = system;
 	}
 	
 	private void InitialiseAircraftFeeder(String feederIdentification, Dimension screenSize)
@@ -146,7 +143,6 @@ public class CollisionAvoidanceSystem extends JFrame {
 
 
 	private ArrayList<Aircraft> retrieveAircrafts() {
-		// if (system == null) { throw new InvalidArgumentException(); }
 		ArrayList<Aircraft> aircrafts = new ArrayList<Aircraft>();
 		for (int i = 0; i < system.getAircrafts()._oHash(); i++) {
 			aircrafts.add((Aircraft) system.getAircrafts()._oIndex(i));

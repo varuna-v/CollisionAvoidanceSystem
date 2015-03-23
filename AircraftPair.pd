@@ -19,23 +19,21 @@ interface
 	function craft2;
 
 	function getConflictStatus : ConflictStatus
-		^= craft1.getConflictStatus(craft2);
-		//!!assert result = craft2.getConflictStatus(craft1);		
+		^= craft1.getConflictStatus(craft2)
+		assert result = craft2.getConflictStatus(craft1);		
 	
 	function timeToConflict : real
 		^= craft1.timeToConflict(craft2);
 		
 	function getMovementToPreventConflict : string
 		pre getConflictStatus = ConflictStatus PotentialFutureConflict
-		^= "Elevate " ++ ([craft1.position.z > craft2.position.z] : craft1.identification ++ " to " ++ (craft1.position.z + craft1.getMinimumVerticalSeparation(craft2) - craft1.getHeightDifference(craft2)).toString,
-			[] : craft2.identification ++ " to " ++ (craft2.position.z + craft1.getMinimumVerticalSeparation(craft2) - craft1.getHeightDifference(craft2)).toString) ++ " units";
-	
+		^= "Alter altitude of " ++ craft1.identification ++ " to " ++
+			([craft1.position.z > craft2.position.z] :  (craft1.position.z + (craft1.getMinimumVerticalSeparation(craft2) - craft1.getHeightDifference(craft2))).toString,
+			[] : (craft1.position.z - (craft1.getMinimumVerticalSeparation(craft2) - craft1.getHeightDifference(craft2))).toString) ++ " meters";
+			
 	function breaksMinimumVerticalSeparation : bool
 		^= craft1.breaksMinimumVerticalSeparation(craft2);
 	
-	//!!redefine operator =(other : AircraftPair) : bool
-	//^= ((craft1 = other.craft1 & craft2 = other.craft2) | (craft1 = other.craft2 & craft2 = other.craft1));
-
 	redefine function toString : string
 		^=	"Craft 1 <br>" ++ craft1.toString ++ "<br> Craft 2 <br>" ++ craft2.toString; 
 	

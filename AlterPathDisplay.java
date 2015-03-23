@@ -12,7 +12,6 @@ import Ertsys.*;
 public class AlterPathDisplay extends JPanel
 {
 	private List<Aircraft> _aircrafts;
-	//private JComboBox cbxIdentities;
 	private JTextField txtIdentity;
 	private JTextField txtTargetHeight;
 	public JButton btnConfirm;
@@ -24,8 +23,6 @@ public class AlterPathDisplay extends JPanel
 		_aircrafts = aircrafts;
 		add(new JLabel("Identity: "));
 		
-		//configureIdentitiesComboBox(aircrafts);
-		//add(cbxIdentities);
 		txtIdentity = new JTextField();
 		add(txtIdentity);
 		
@@ -69,7 +66,7 @@ public class AlterPathDisplay extends JPanel
 			return null;
 		}
 		
-		if (targetHeight > 30000.0)
+		if (targetHeight > 17000.0)
 		{
 			lblError.setText("Target height is too high");
 			return null;
@@ -110,28 +107,4 @@ public class AlterPathDisplay extends JPanel
 		}
 		return false;
 	}
-	
-//	private void configureIdentitiesComboBox(List<Aircraft> aircrafts)
-//	{
-//		if (cbxIdentities == null) { cbxIdentities = new JComboBox(); }
-//		
-//		if (aircrafts != null) 
-//		{
-//			DefaultComboBoxModel model = (DefaultComboBoxModel)cbxIdentities.getModel(); 
-//			for(Aircraft aircraft : aircrafts)
-//			{
-//				String id = aircraft.identification.toString();
-//				String sId = id.substring(4, id.length()-1).replaceAll(",", "");
-//				if (model.getIndexOf(sId) == -1)
-//					cbxIdentities.addItem(sId);
-//			}
-//			
-//			cbxIdentities.setEnabled(true);
-//		}
-//		else
-//		{
-//			cbxIdentities.removeAllItems();
-//			cbxIdentities.setEnabled(false);
-//		}
-//	}
 }

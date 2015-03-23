@@ -19,7 +19,7 @@ import Ertsys.*;
 public class CraftsMovementDisplay extends JPanel {
 
 	private List<Aircraft> _aircrafts;
-	private static final double scale = 1.4; //!!
+	private static final double scale = 1.4;
 	
 	public CraftsMovementDisplay(List<Aircraft> aircrafts)
 	{

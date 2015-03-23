@@ -4,8 +4,7 @@
 //* Created: 15:02:04 on Monday March 9th 2015 UTC
 //*******************************************************
 
-//!!rename to equation
-class QuadraticEquation ^=
+class Equation ^=
 abstract
 	
 	var a : real;
@@ -15,7 +14,6 @@ abstract
 interface
 	
 	function getXForMinimumValue : real
-		//pre a > 0.0
 		^= (let derivative ^= differentiateWRTx;
 			((derivative.c * -1.0) / derivative.b));			
 	
@@ -28,14 +26,14 @@ interface
 				   [r2 > 0.0 & r2 < r1] : r2,
 				   [] : 100000.0))));
 	
-	function differentiateWRTx : QuadraticEquation
-		^= QuadraticEquation{0.0, 2.0 * a, b};
+	function differentiateWRTx : Equation
+		^= Equation{0.0, 2.0 * a, b};
 	
-	operator +(other : QuadraticEquation) : QuadraticEquation
-		^= QuadraticEquation{a + other.a, b + other.b, c + other.c};
+	operator +(other : Equation) : Equation
+		^= Equation{a + other.a, b + other.b, c + other.c};
 		
-	operator - (other : QuadraticEquation) : QuadraticEquation
-		^= QuadraticEquation{a - other.a, b - other.b, c - other.c};
+	operator - (other : Equation) : Equation
+		^= Equation{a - other.a, b - other.b, c - other.c};
 	
 	redefine function toString : string
 		^= "\n(" ++ a.toString ++ ") x^2 + (" ++ b.toString ++ ") x + (" ++ c.toString ++")";
@@ -43,5 +41,3 @@ interface
 	build{!a : real, !b : real, !c : real};
 	
 end;
-
-// End

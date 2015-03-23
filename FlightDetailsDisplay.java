@@ -19,15 +19,6 @@ public class FlightDetailsDisplay extends JPanel
 		setBorder(BorderFactory.createLineBorder(getForeground()));
 	}
 	
-	//!! is this method used?
-	public void updateAircraft(Aircraft aircraft)
-	{
-		_aircraft = aircraft;
-		setVariableLabels();
-		//if (aircraft != null && aircraft.identification.equals(_aircraft.identification))
-		//{}
-	}
-	
 	private void setInitialLabels()
 	{
 		_labels[2].setText("    Position: ");

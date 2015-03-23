@@ -4,15 +4,14 @@
 //* Created: 14:30:57 on Sunday January 25th 2015 UTC
 //* Note:    This is the 'Perfect' program entry point.
 //*******************************************************
-
-//import "?.pd";		// File containing main application class
+//Only used for tests and debugging
 
 schema main(context!: limited Environment, args: seq of string, ret!: out int)
 	pre #args > 0
 	post change context , ret satisfy undefRel(context' , ret') , ret' = 0
 	via
-		let initialCrafts ^= seq of Aircraft {Aircraft {Vector{5.0  , 2.0 , 1000.00, VectorType Position}, Vector{-3.0, 1.00, 0.00, VectorType Velocity}, 50.00, AircraftStatus FlyingAtLevel, "A", AircraftModel Boeing777200},
-											  Aircraft {Vector{4.00  , 3.00 , 1000.00, VectorType Position}, Vector{-1.00, 2.00, 0.00, VectorType Velocity}, 20.00, AircraftStatus FlyingAtLevel, "B", AircraftModel Boeing777200}};
+		let initialCrafts ^= seq of Aircraft {Aircraft {Vector{5.0  , 2.0 , 1000.00, VectorType Position}, Vector{-3.0, 1.00, 0.00, VectorType Velocity}, 50.00, "A", AircraftModel Boeing777200},
+											  Aircraft {Vector{4.00  , 3.00 , 1000.00, VectorType Position}, Vector{-1.00, 2.00, 0.00, VectorType Velocity}, 20.00, "B", AircraftModel Boeing777200}};
 		var system : AirTrafficController != AirTrafficController{initialCrafts, 0.00, 10000.00, 0.00, 10000.00};
         context!print("System booted\n") ;
 		//context!print(system.getMinDist);
@@ -26,7 +25,7 @@ schema main(context!: limited Environment, args: seq of string, ret!: out int)
                     rret : FileError ;
                 count! - 1 ,
 				context!print(printStuff(system) ++ "\n----------------\n");
-				system!addAircraft(Aircraft {Vector{0.00 , 0.00, 344.00, VectorType Position}, Vector{364.00, 63.00, 0.00, VectorType Velocity}, 5.00, AircraftStatus FlyingAtLevel, "G", AircraftModel Boeing777200});
+				system!addAircraft(Aircraft {Vector{0.00 , 0.00, 344.00, VectorType Position}, Vector{364.00, 63.00, 0.00, VectorType Velocity}, 5.00, "G", AircraftModel Boeing777200});
                 context!readLine(line! , rret!) ;
 				system!changeCraftHeight("A", 1350.0);
                 if [line="X" | system.numberOfAirCrafts = 0] : count != 0;

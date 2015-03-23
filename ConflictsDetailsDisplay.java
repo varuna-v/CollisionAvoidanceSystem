@@ -45,8 +45,8 @@ public class ConflictsDetailsDisplay extends JPanel
 		{
 			for (int i = 0; i < criticalPairs.length && labelCount + 1 < _JLCriticalPairs.length; i++)
 			{
-				_JLCriticalPairs[labelCount++].setText("    " + _eSystem._lJavaString(criticalPairs[i].craft1.identification) + " & " + _eSystem._lJavaString(criticalPairs[i].craft2.identification));
-				_JLCriticalPairs[labelCount++].setText(String.valueOf(criticalPairs[i].timeToConflict()*10.0));
+				_JLCriticalPairs[labelCount++].setText("                         " + _eSystem._lJavaString(criticalPairs[i].craft1.identification) + " & " + _eSystem._lJavaString(criticalPairs[i].craft2.identification));
+				_JLCriticalPairs[labelCount++].setText(String.valueOf(criticalPairs[i].timeToConflict() * 10.0));
 				_JLCriticalPairs[labelCount++].setText(_eSystem._lJavaString(criticalPairs[i].getMovementToPreventConflict()));
 			}
 		}
@@ -55,7 +55,6 @@ public class ConflictsDetailsDisplay extends JPanel
 	}
 	
 	private AircraftPair[] getCriticalPairs() {
-		// if (system == null) { throw new InvalidArgumentException(); }
 		List<AircraftPair> pairs = new ArrayList<AircraftPair>();
 		for (int i = 0; i < _system.getAircraftPairsOrderedByTimeToConflict()._oHash(); i++) {
 			if (i == 5) { break; }
