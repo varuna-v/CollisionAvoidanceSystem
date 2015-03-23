@@ -1,7 +1,7 @@
 To run the CollisionAvoidanceSystem:
 
 1. Open terminal
-2. Navigate to the main project folder
+2. Navigate to CollisionAvoidanceSystem/output
 3. Run the following command: java -jar cas.jar
 
 To run a test, add the test code to the command.
